@@ -1,10 +1,19 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import { HashRouter, Routes, Route } from "react-router-dom";
+import ReactDOM from "react-dom/client";
+import DroneSlateSimulator from "./simulators/DroneSlateSimulator.jsx";
+import DroneTransportationSimulator from "./simulators/DroneTransportationSimulator.jsx";
+import HomePage from "./home/dashboard/Homepage.jsx";
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/transportation" element={<DroneTransportationSimulator />} />
+        <Route path="/slate" element={<DroneSlateSimulator />} />
+
+      </Routes>
+    </HashRouter>
+  </React.StrictMode>
+);

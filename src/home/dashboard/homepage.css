@@ -1,0 +1,109 @@
+.home-page {
+  background-color: #f0f0f0; /* Light background for better contrast */
+  padding: 20px; /* General padding for the entire page */
+  height: 100vh;
+  overflow-y: scroll;
+}
+
+.title-bar {
+  text-align: center;
+  margin-bottom: 20px; /* Space below the title bar */
+}
+
+.tiles-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Space between tiles */
+  justify-content: center; /* Center align tiles */
+}
+
+.tile {
+  background-color: #ffffff; /* White background for tiles */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  padding: 15px; /* Inner padding */
+  width: 250px; /* Fixed width for tiles */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.2s; /* Smooth scaling on hover */
+  cursor: pointer; /* Change cursor to pointer */
+  text-align: center; /* Center text inside tile */
+}
+
+.tile:hover {
+  transform: scale(1.05); /* Scale up tile on hover */
+}
+
+.tile-image {
+  width: 100%; /* Full width image */
+  border-radius: 4px; /* Slightly round image corners */
+  margin-bottom: 10px; /* Space between image and title */
+  height: 250px
+}
+
+.tile-title {
+  font-weight: bold; /* Bold title */
+  margin-bottom: 5px; /* Space below title */
+  font-size: 1.2em; /* Slightly larger font size */
+  font-family: monospace;
+}
+
+.tile-details {
+  color: #555; /* Dark grey for details */
+  font-size: 0.9em; /* Smaller font size for details */
+  font-family: monospace;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  background-color: #ffffff; /* Light background color for header */
+  border-bottom: 1px solid #ddd; /* Subtle border */
+
+}
+
+
+.logo {
+  max-width: 450px; /* Limit logo size */
+  height: auto; /* Maintain aspect ratio */
+}
+
+.description-container {
+  flex: 2; /* Allow description to take more space */
+  padding: 20px; /* Space between logo and description */
+  font-family: monospace;
+}
+
+.description-container h1 {
+  font-size: 1.8em; /* Title font size */
+  margin-bottom: 10px; /* Space below title */
+}
+
+.description-container p {
+  font-size: 1em; /* Description font size */
+  color: #333; /* Dark text color for readability */
+  line-height: 1.5; /* Line height for better readability */
+}
+
+.footer {
+  text-align: center;
+  padding: 10px;
+  font-size: 14px;
+  color: #555;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  background-color: #f9f9f9;
+}
+
+
+.tile-banner {
+  top: 8px;
+  left: 8px;
+  background-color: rgba(255, 0, 0, 0.8);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  z-index: 1;
+}
