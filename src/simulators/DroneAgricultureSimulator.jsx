@@ -1,14 +1,14 @@
-import { AppContainer } from '../components/AppContainer.jsx';
+import { AppContainer } from "../components/AppContainer.jsx";
 import { useRef, useState, useEffect } from "react";
-import {Toolbar} from '../components/Toolbar.jsx'
-import emitter from '../config/eventEmmiter.js';
-import Agriculture from '../environments/Agriculture.jsx';
+import { Toolbar } from "../components/Toolbar.jsx";
+import emitter from "../config/eventEmmiter.js";
+import Agriculture from "../environments/Agriculture.jsx";
 
-import BlockPad from '../components/blockly/BlockPad.jsx';
+import BlockPad from "../components/blockly/BlockPad.jsx";
 import "../css/droneAgricultureSimulator.css";
 
 const DroneAgricultureSimulator = () => {
-  window.gtag('event', 'page_view', { page_path: window.location.pathname });
+  window.gtag("event", "page_view", { page_path: window.location.pathname });
 
   const droneRef = useRef(); // Create a ref for the Drone component
   const [measurementView, setMeasurementView] = useState(false);
@@ -20,16 +20,19 @@ const DroneAgricultureSimulator = () => {
     zPos: 0,
     xRot: 0,
     yRot: 0,
-    zRot: 0
+    zRot: 0,
   });
 
   useEffect(() => {
-    const setMeasurementViewValue = (value) => { setMeasurementView(value); };
-    const setMouseControlValue = (value) => { setMouseControl(value); };
+    const setMeasurementViewValue = (value) => {
+      setMeasurementView(value);
+    };
+    const setMouseControlValue = (value) => {
+      setMouseControl(value);
+    };
 
-    
-    emitter.on('measurementViewEnabled', setMeasurementViewValue);
-    emitter.on('mouseControlEnabled', setMouseControlValue);
+    emitter.on("measurementViewEnabled", setMeasurementViewValue);
+    emitter.on("mouseControlEnabled", setMouseControlValue);
 
     const updateDronePosition = () => {
       if (droneRef.current) {
@@ -46,26 +49,27 @@ const DroneAgricultureSimulator = () => {
 
     // Set up a recurring interval to check the drone’s position
     const interval = setInterval(updateDronePosition, 100); // Updates every 100 ms
-      return () => clearInterval(interval); // Clean up on unmount
-    }, []);
-  
-    return (
-      <AppContainer>     
-          <div className="simulation-container">
-            <div className="blockpad-container">
-              <BlockPad/>
-            </div>
-            
-            <div className="transportation-canvas-container">
-              <Toolbar dronePosition={dronePosition} />
-              <Architecture 
-                droneRef={droneRef} 
-                measurementViewEnabled={measurementView}
-                mouseControlEnabled={mouseControl} />
-            </div>
-          </div>
-      </AppContainer>
-    );
+    return () => clearInterval(interval); // Clean up on unmount
+  }, []);
+
+  return (
+    <AppContainer>
+      <div className="simulation-container">
+        <div className="blockpad-container">
+          <BlockPad />
+        </div>
+
+        <div className="transportation-canvas-container">
+          <Toolbar dronePosition={dronePosition} />
+          <Agriculture
+            droneRef={droneRef}
+            measurementViewEnabled={measurementView}
+            mouseControlEnabled={mouseControl}
+          />
+        </div>
+      </div>
+    </AppContainer>
+  );
 };
 
 export default DroneAgricultureSimulator;
