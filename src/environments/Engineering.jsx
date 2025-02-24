@@ -169,7 +169,7 @@ const ScreenshotCapture = () => {
   return null; 
 };
 
-const Education = ({
+const Engineering = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
@@ -204,10 +204,10 @@ const Education = ({
   );
 };
 
-Education.propTypes = {
+Engineering.propTypes = {
   droneRef: PropTypes.object.isRequired, // Define the prop type
   mouseControlEnabled: PropTypes.bool,
   measurementViewEnabled:  PropTypes.bool,
 };
 
-export default Education;
+export default Engineering;

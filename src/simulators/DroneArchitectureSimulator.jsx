@@ -2,7 +2,7 @@ import { AppContainer } from '../components/AppContainer.jsx';
 import { useRef, useState, useEffect } from "react";
 import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
-import Transportation from '../environments/Transportation.jsx';
+import Architecture from '../environments/Architecture.jsx';
 
 import BlockPad from '../components/blockly/BlockPad.jsx';
 import "../css/droneArchitectureSimulator.css";
@@ -58,7 +58,7 @@ const DroneArchitectureSimulator = () => {
             
             <div className="transportation-canvas-container">
               <Toolbar dronePosition={dronePosition} />
-              <Transportation 
+              <Architecture 
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}
                 mouseControlEnabled={mouseControl} />

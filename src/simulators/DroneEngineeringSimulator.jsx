@@ -2,12 +2,12 @@ import { AppContainer } from '../components/AppContainer.jsx';
 import { useRef, useState, useEffect } from "react";
 import {Toolbar} from '../components/Toolbar.jsx'
 import emitter from '../config/eventEmmiter.js';
-import Education from '../environments/Education.jsx';
+import Engineering from '../environments/Engineering.jsx';
 
 import BlockPad from '../components/blockly/BlockPad.jsx';
-import "../css/droneEducationSimulator.css";
+import "../css/droneEngineeringSimulator.css";
 
-const DroneEducationSimulator = () => {
+const DroneEngineeringSimulator = () => {
   window.gtag('event', 'page_view', { page_path: window.location.pathname });
 
   const droneRef = useRef(); // Create a ref for the Drone component
@@ -58,7 +58,7 @@ const DroneEducationSimulator = () => {
             
             <div className="transportation-canvas-container">
               <Toolbar dronePosition={dronePosition} />
-              <Education 
+              <Engineering 
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}
                 mouseControlEnabled={mouseControl} />
@@ -68,4 +68,4 @@ const DroneEducationSimulator = () => {
     );
 };
 
-export default DroneEducationSimulator;
+export default DroneEngineeringSimulator;

@@ -7,6 +7,8 @@ import DroneTransportationSimulator from "./simulators/DroneTransportationSimula
 import DroneBusinessSimulator from './simulators/DroneBusinessSimulator.jsx';
 import DroneEducationSimulator from './simulators/DroneEducationSimulator.jsx';
 import DroneCommunicationSimulator from './simulators/DroneCommunicationSimulator.jsx';
+import DroneEngineeringSimulator from './simulators/DroneEngineeringSimulator.jsx'
+
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -18,6 +20,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/business" element={<DroneBusinessSimulator />} />
         <Route path="/education" element={<DroneEducationSimulator />} />
         <Route path="/communication" element={<DroneCommunicationSimulator />} />
+        <Route path="/engineering" element={<DroneEngineeringSimulator />} />
 
         <Route path="/slate" element={<DroneSlateSimulator />} />
 
