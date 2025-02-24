@@ -8,7 +8,7 @@ import ActionButton from './ActionButton.jsx';
 export const AppContainer = ({ children }) => {
     const navigate = useNavigate();
 
-    const handleLogoClick = () => { window.location.href = "https://nextwavestem.github.io/drone-simulation/#/"; };
+    const handleLogoClick = () => {  };
 
     useEffect(() => {
         const getCookieValue = (name) => {
@@ -18,7 +18,8 @@ export const AppContainer = ({ children }) => {
 
         const sessionActive = getCookieValue('session_active'); 
         if (!sessionActive) {
-            navigate('/');
+            // TODO
+            // navigate('/');
         }
     }, [navigate]);
 
