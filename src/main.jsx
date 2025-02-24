@@ -10,7 +10,7 @@ import DroneCommunicationSimulator from './simulators/DroneCommunicationSimulato
 import DroneEngineeringSimulator from './simulators/DroneEngineeringSimulator.jsx'
 import DroneHealthScienceSimulator from './simulators/DroneHealthScienceSimulator.jsx'
 import DroneHumanServicesSimulator from './simulators/DroneHumanServicesSimulator.jsx'
-
+import DroneITSimulator from './simulators/DroneITSimulator.jsx'
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -24,7 +24,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/communication" element={<DroneCommunicationSimulator />} />
         <Route path="/engineering" element={<DroneEngineeringSimulator />} />
         <Route path="/healthscience" element={<DroneHealthScienceSimulator />} />
-        <Route path="/humanservices" element={<DroneHumanServicesSimulator />} />
+        <Route path="/human-services" element={<DroneHumanServicesSimulator />} />
+        <Route path="/information-technology" element={<DroneITSimulator />} />
 
         <Route path="/slate" element={<DroneSlateSimulator />} />
 
