@@ -139,7 +139,7 @@ const displayCoordinatesText = (text, position) => {
 };
 
 const Model = () => {
-  const { scene } = useGLTF("assets/models/education/classroom1.glb");
+  const { scene } = useGLTF("assets/models/education/classroom2.glb");
   const modelPosition = [175, -85, 120];
 
   // Set the desired rotation (in radians)
