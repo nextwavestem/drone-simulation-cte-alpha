@@ -13,40 +13,26 @@ import DroneHumanServicesSimulator from "./simulators/DroneHumanServicesSimulato
 import DroneITSimulator from "./simulators/DroneITSimulator.jsx";
 import DroneAgricultureSimulator from "./simulators/DroneAgricultureSimulator.jsx";
 import DroneManufacturingSimulator from "./simulators/DroneManufacturingSimulator.jsx";
+import DroneHospitalitySimulator from "./simulators/DroneHospitalitySimulator.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
         <Route path="/" element={<DroneTransportationSimulator />} />
-        <Route
-          path="/transportation"
-          element={<DroneTransportationSimulator />}
-        />
+        <Route path="/transportation" element={<DroneTransportationSimulator />} />
         <Route path="/architecture" element={<DroneArchitectureSimulator />} />
         <Route path="/business" element={<DroneBusinessSimulator />} />
         <Route path="/education" element={<DroneEducationSimulator />} />
-        <Route
-          path="/communication"
-          element={<DroneCommunicationSimulator />}
-        />
+        <Route path="/communication" element={<DroneCommunicationSimulator />} />
         <Route path="/engineering" element={<DroneEngineeringSimulator />} />
-        <Route
-          path="/healthscience"
-          element={<DroneHealthScienceSimulator />}
-        />
-        <Route
-          path="/human-services"
-          element={<DroneHumanServicesSimulator />}
-        />
+        <Route path="/healthscience" element={<DroneHealthScienceSimulator />} />
+        <Route path="/hospitality" element={<DroneHospitalitySimulator />} />
+        <Route path="/human-services" element={<DroneHumanServicesSimulator />} />
         <Route path="/information-technology" element={<DroneITSimulator />} />
         <Route path="/agriculture" element={<DroneAgricultureSimulator />} />
-
         <Route path="/slate" element={<DroneSlateSimulator />} />
-        <Route
-          path="/manufacturing"
-          element={<DroneManufacturingSimulator />}
-        />
+        <Route path="/manufacturing" element={<DroneManufacturingSimulator />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>
