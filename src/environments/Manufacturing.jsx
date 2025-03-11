@@ -139,11 +139,11 @@ const displayCoordinatesText = (text, position) => {
 };
 
 const Model = () => {
-  const { scene } = useGLTF("assets/models/manufacturing/manufacturing.glb");
-  const modelPosition = [-40, 0, 60];
+  const { scene } = useGLTF("assets/models/manufacturing/boat.glb");
+  const modelPosition = [-50, -80, 180];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, 190, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 188, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -207,8 +207,8 @@ const Manufacturing = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.4}
-        cameraOffset={[20, 10, -12]}
+        droneScale={0.5}
+        cameraOffset={[0, 20, -38]}
         lineColor={dronePathColor}
       />
     </Canvas>
