@@ -210,6 +210,7 @@ const Architecture = ({
         droneScale={0.4}
         cameraOffset={[0, 10, -15]}
         lineColor={dronePathColor}
+        droneSpeed={0.9}
       />
     </Canvas>
   );

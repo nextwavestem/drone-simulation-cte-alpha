@@ -33,6 +33,7 @@ export const Drone = React.forwardRef(
       droneScale,
       cameraOffset,
       lineColor,
+      droneSpeed = 0.033333333332,
     },
     ref
   ) => {
@@ -59,7 +60,7 @@ export const Drone = React.forwardRef(
     const [isFlipping, setIsFlipping] = useState(false); // State to track flipping status
 
     const DEFAULT_DRONE_SPEED = 0.033333333332;
-    let droneSpeed = DEFAULT_DRONE_SPEED;
+    //let droneSpeed = DEFAULT_DRONE_SPEED;
 
     const updateDronePosition = (directionVector, [distance, unit]) => {
       const targetPosition = directionVector.clone();
@@ -493,6 +494,7 @@ Drone.propTypes = {
   droneScale: PropTypes.number,
   cameraOffset: PropTypes.arrayOf(PropTypes.number),
   lineColor: PropTypes.string,
+  droneSpeed: PropTypes.number,
 };
 
 export default Drone;
