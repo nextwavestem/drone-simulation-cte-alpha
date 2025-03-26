@@ -9,5 +9,7 @@ export const COLORS = {
     TEXT: '#f15bb5',
     LISTS: '#9b5de5',
     VARIABLE: '#08979d',
-    FUNCTIONS: '#0d3b66'
+    FUNCTIONS: '#0d3b66',
+    ACTIONS: '#ef476f'
+
 }

@@ -135,6 +135,15 @@ export const toolbarConfig = {
     },
     {
       kind: "category",
+      name: "Actions",
+      categorystyle: 'actions_category', // Add this style in COLORS too
+      contents: [
+        { kind: "block", type: "pickup_object" },
+        { kind: "block", type: "drop_object" }
+      ]
+    },    
+    {
+      kind: "category",
       name: "Logic",
       categorystyle: 'logic_category',
       contents: [
@@ -971,4 +980,30 @@ export const toolbarBlocksDefinitions = (Blockly) => {
       this.setHelpUrl("");
     }
   };
+  Blockly.Blocks['pickup_object'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("pick up object")
+          .appendField(new Blockly.FieldTextInput("book1"), "OBJECT_NAME");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.ACTIONS);
+      this.setTooltip("Pick up an object by name");
+      this.setHelpUrl("");
+    }
+  };
+  
+  Blockly.Blocks['drop_object'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("drop object")
+          .appendField(new Blockly.FieldTextInput("book1"), "OBJECT_NAME");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.ACTIONS);
+      this.setTooltip("Drop an object by name");
+      this.setHelpUrl("");
+    }
+  };
+  
 };

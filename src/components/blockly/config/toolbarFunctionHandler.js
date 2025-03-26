@@ -201,6 +201,16 @@ export const toolbarFunctionHandler = () => {
     javascriptGenerator.forBlock['flip_backward'] = function() {
         return `flip('BACKWARD');`;
     } 
+    javascriptGenerator.forBlock['pickup_object'] = function(block) {
+        const objectName = block.getFieldValue('OBJECT_NAME');
+        return `pickupObject('${objectName}');`;
+      };
+      
+      javascriptGenerator.forBlock['drop_object'] = function(block) {
+        const objectName = block.getFieldValue('OBJECT_NAME');
+        return `dropObject('${objectName}');`;
+      };
+      
 }
 
 

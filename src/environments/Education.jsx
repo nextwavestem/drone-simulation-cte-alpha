@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
+import { OrbitControls, Environment, useGLTF, Text } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import * as THREE from "three";
@@ -10,6 +10,7 @@ import { Drone } from "../components/Drone.jsx";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
+import SimpleModel from "../components/SimpleModel";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -26,8 +27,8 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
-      camera.lookAt(new THREE.Vector3(0, 0, 0));
+      camera.position.set(5, 18, -5); // Move camera to top-down view
+      camera.lookAt(new THREE.Vector3(-2, -3, 11));
       camera.updateProjectionMatrix();
 
       if (controlsRef.current) {
@@ -102,7 +103,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       lastPosition.copy(point); // Update lastPosition to the current intersection point
 
       // Display the distance near the point
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      const coordinatesText = `X: ${point.x.toFixed(
+        2
+      )} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -127,7 +131,8 @@ const displayCoordinatesText = (text, position) => {
       });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
-      textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+      //textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+      textMesh.lookAt(GlobalCamera.position);
 
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
@@ -140,14 +145,14 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF("assets/models/education/classroom2.glb");
-  const modelPosition = [175, -85, 120];
-
+  //const modelPosition = [175, -85, 120];
+  const modelPosition = [35, -11, 13];
   // Set the desired rotation (in radians)
   const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={45} />;
+  return <primitive object={scene} position={modelPosition} scale={9} />;
 };
 
 const ScreenshotCapture = () => {
@@ -183,6 +188,52 @@ const Education = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
+  const bookRef = useRef();
+  const bookReff = useRef();
+  const bookRef1 = useRef();
+  const bookRef2 = useRef();
+
+  useEffect(() => {
+    const handlePickup = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      const dronePos = new THREE.Vector3();
+      const bookPos = new THREE.Vector3();
+      drone.getWorldPosition(dronePos);
+      book.getWorldPosition(bookPos);
+      const distance = dronePos.distanceTo(bookPos);
+
+      if (distance < 15) {
+        drone.attach(book);
+        book.position.set(0, -2, 0);
+        console.log(`✅ Picked up ${objectName}`);
+      } else {
+        console.log(`❌ ${objectName} too far to pick up.`);
+      }
+    };
+
+    const handleDrop = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      GlobalScene.attach(book);
+      const dropPosition = new THREE.Vector3();
+      drone.getWorldPosition(dropPosition);
+      book.position.copy(dropPosition);
+      console.log(`📦 Dropped ${objectName}`);
+    };
+
+    emitter.on("commandPickupObject", handlePickup);
+    emitter.on("commandDropObject", handleDrop);
+
+    return () => {
+      emitter.off("commandPickupObject", handlePickup);
+      emitter.off("commandDropObject", handleDrop);
+    };
+  }, []);
 
   return (
     <Canvas
@@ -207,9 +258,69 @@ const Education = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.4}
-        cameraOffset={[2, 9, -13]}
+        droneScale={0.8}
+        cameraOffset={[5, 9, -12]}
         lineColor={dronePathColor}
+      />
+      <SimpleModel
+        ref={bookRef}
+        path="/assets/models/education/book.glb"
+        position={[7, -3, 18]}
+        scale={1}
+        name="book1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={bookReff}
+        path="/assets/models/education/book.glb"
+        position={[12, -1.5, 47]}
+        scale={1}
+        name="book2"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={bookRef1}
+        path="/assets/models/education/books.glb"
+        position={[3, -1.5, 1]}
+        scale={0.6}
+        name="book3"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={bookRef2}
+        path="/assets/models/education/books.glb"
+        position={[3, -1.5, -0.5]}
+        scale={0.6}
+        name="book4"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        path="/assets/models/education/pen.glb"
+        position={[-14, -8, 20]}
+        scale={0.3}
+        name="pen1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        path="/assets/models/education/trashcan.glb"
+        position={[-9, -10, -2]}
+        scale={4}
+        name="trashcan"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        path="/assets/models/education/paper.glb"
+        position={[-7, -10, 48]}
+        scale={1}
+        name="trash1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        path="/assets/models/education/paper.glb"
+        position={[-27, -10, 3]}
+        scale={1}
+        name="trash2"
+        enableMeasurement={measurementViewEnabled}
       />
     </Canvas>
   );

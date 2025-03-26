@@ -78,6 +78,10 @@ export default Blockly.Theme.defineTheme('modern', {
       functions_category: {
         colour: COLORS.FUNCTIONS
       },
+      actions_category: {
+        colour: COLORS.ACTIONS
+      },
+      
     },
     componentStyles: {
         flyoutOpacity: 0.4
