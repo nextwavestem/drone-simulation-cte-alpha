@@ -264,7 +264,7 @@ const Education = ({
       />
       <SimpleModel
         ref={bookRef}
-        path="/assets/models/education/book.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/education/book.glb`}
         position={[7, -3, 18]}
         scale={1}
         name="book1"
@@ -272,7 +272,7 @@ const Education = ({
       />
       <SimpleModel
         ref={bookReff}
-        path="/assets/models/education/book.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/education/book.glb`}
         position={[12, -1.5, 47]}
         scale={1}
         name="book2"
@@ -280,7 +280,7 @@ const Education = ({
       />
       <SimpleModel
         ref={bookRef1}
-        path="/assets/models/education/books.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/education/books.glb`}
         position={[3, -1.5, 1]}
         scale={0.6}
         name="book3"
@@ -288,35 +288,35 @@ const Education = ({
       />
       <SimpleModel
         ref={bookRef2}
-        path="/assets/models/education/books.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/education/books.glb`}
         position={[3, -1.5, -0.5]}
         scale={0.6}
         name="book4"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/education/pen.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/education/pen.glb`}
         position={[-14, -8, 20]}
         scale={0.3}
         name="pen1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/infotech/trashcan.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/trashcan.glb`}
         position={[-9, -10, -2]}
         scale={4}
         name="trashcan"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/infotech/paper.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/paper.glb`}
         position={[-7, -10, 48]}
         scale={1}
         name="trash1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/infotech/paper.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/paper.glb`}
         position={[-27, -10, 3]}
         scale={1}
         name="trash2"

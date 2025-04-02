@@ -264,7 +264,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={carRef}
-        path="/assets/models/manufacturing/car.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/manufacturing/car.glb`}
         position={[-30, 16, 30]}
         rotation={[0, Math.PI - 10, 0]}
         scale={0.09}
@@ -272,7 +272,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={fireRef}
-        path="/assets/models/manufacturing/fire.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/manufacturing/fire.glb`}
         position={[17, 16, 80]}
         rotation={[0, Math.PI - 10, 0]}
         scale={0.02}
@@ -280,7 +280,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={maskRef}
-        path="/assets/models/manufacturing/mask.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/manufacturing/mask.glb`}
         position={[-80, 30, 20]}
         rotation={[0, Math.PI, 0]}
         scale={30}
@@ -288,7 +288,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={trashcanRef}
-        path="/assets/models/infotech/trashcan.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/trashcan.glb`}
         position={[-68, 0, 0]}
         rotation={[0, Math.PI / 2, 0]}
         scale={12}
@@ -296,7 +296,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={bananaRef}
-        path="/assets/models/infotech/banana.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/banana.glb`}
         position={[-30, 0, -40]}
         rotation={[0, Math.PI / 2, 0]}
         scale={15}
@@ -305,7 +305,7 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={sawRef}
-        path="/assets/models/manufacturing/saw.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/manufacturing/saw.glb`}
         position={[-10, 0, 80]}
         rotation={[0, Math.PI / 2, 0]}
         scale={2}
@@ -314,7 +314,9 @@ const Manufacturing = ({
       />
       <SimpleModel
         ref={screwdriverRef}
-        path="/assets/models/manufacturing/screwdriver.glb"
+        path={`${
+          import.meta.env.BASE_URL
+        }assets/models/manufacturing/screwdriver.glb`}
         position={[15, 10, 10]}
         rotation={[0, Math.PI / 8, 0]}
         scale={10}

@@ -267,7 +267,9 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={cushionRef1}
-        path="/assets/models/hospitality/cushion.glb"
+        path={`${
+          import.meta.env.BASE_URL
+        }assets/models/hospitality/cushion.glb`}
         position={[-20, -30, 6]}
         rotation={[0, Math.PI + 45, 0]}
         scale={20}
@@ -276,7 +278,7 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={walletRef}
-        path="/assets/models/hospitality/wallet.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/hospitality/wallet.glb`}
         position={[20, -10, 50]}
         rotation={[0, Math.PI / 4, 0]}
         scale={0.5}
@@ -285,7 +287,9 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={cushionRef2}
-        path="/assets/models/hospitality/cushion.glb"
+        path={`${
+          import.meta.env.BASE_URL
+        }assets/models/hospitality/cushion.glb`}
         position={[-45, -30, 6]}
         rotation={[0, Math.PI + 45, 0]}
         scale={20}
@@ -294,7 +298,7 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={trashcanRef}
-        path="/assets/models/infotech/trashcan.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/trashcan.glb`}
         position={[0, -35, 50]}
         rotation={[0, Math.PI / 2, 0]}
         scale={20}
@@ -303,7 +307,7 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={bananaRef}
-        path="/assets/models/infotech/banana.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/banana.glb`}
         position={[-30, -35, 50]}
         rotation={[0, Math.PI / 2, 0]}
         scale={20}
@@ -312,7 +316,7 @@ const Hospitality = ({
       />
       <SimpleModel
         ref={lostRef}
-        path="/assets/models/hospitality/lost.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/hospitality/lost.glb`}
         position={[-20, -30, 80]}
         rotation={[0, Math.PI / 2, 0]}
         scale={70}

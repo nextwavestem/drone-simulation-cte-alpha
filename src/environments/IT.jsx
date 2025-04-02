@@ -261,7 +261,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={desktopRef1}
-        path="/assets/models/infotech/desktop.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/desktop.glb`}
         position={[32, -6, 6]}
         rotation={[0, Math.PI + 45, 0]}
         scale={2}
@@ -270,7 +270,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={shelfRef}
-        path="/assets/models/infotech/shelf.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/shelf.glb`}
         position={[35, -17, 4]}
         rotation={[0, Math.PI / 4, 0]}
         scale={15}
@@ -278,7 +278,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={desktopRef2}
-        path="/assets/models/infotech/desktop.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/desktop.glb`}
         position={[32, 1, 6]}
         rotation={[0, Math.PI + 45, 0]}
         scale={2}
@@ -287,7 +287,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={trashcanRef}
-        path="/assets/models/infotech/trashcan.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/trashcan.glb`}
         position={[30, -18, 10]}
         rotation={[0, Math.PI / 2, 0]}
         scale={9}
@@ -296,7 +296,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={deskRef}
-        path="/assets/models/infotech/desk.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/desk.glb`}
         position={[-3, -5, 80]}
         rotation={[0, Math.PI / 5, 0]}
         scale={5}
@@ -304,7 +304,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={bananaRef}
-        path="/assets/models/infotech/banana.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/banana.glb`}
         position={[15, -1, 10]}
         rotation={[0, Math.PI / 2, 0]}
         scale={9}
@@ -313,7 +313,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       />
       <SimpleModel
         ref={paperRef}
-        path="/assets/models/infotech/paper.glb"
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/paper.glb`}
         position={[20, -18, 5]}
         //rotation={[0, Math.PI, 0]}
         scale={2}
