@@ -307,7 +307,7 @@ const Agriculture = ({
       />*/}
       <SimpleModel
         ref={canRef}
-        path="/assets/models/agriculture/can.glb"
+        path="assets/models/agriculture/can.glb"
         position={[14, 1, 7]}
         rotation={[0, Math.PI / 2, 0]}
         scale={5}
@@ -316,14 +316,14 @@ const Agriculture = ({
       />
       <SimpleModel
         ref={barnRef}
-        path="/assets/models/agriculture/barn.glb"
+        path="assets/models/agriculture/barn.glb"
         position={[18, 0, 10]}
         scale={40}
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={pestRef}
-        path="/assets/models/agriculture/pesticides.glb"
+        path="assets/models/agriculture/pesticides.glb"
         position={[14, 1, 12]}
         rotation={[0, Math.PI / 2, 0]}
         scale={3}
@@ -332,7 +332,7 @@ const Agriculture = ({
       />
       <SimpleModel
         ref={pollenRef1}
-        path="/assets/models/agriculture/pollen.glb"
+        path="assets/models/agriculture/pollen.glb"
         position={[-1, 25, 50]}
         rotation={[0, 0, Math.PI / 2]}
         scale={0.4}
@@ -341,7 +341,7 @@ const Agriculture = ({
       />
       <SimpleModel
         ref={pollenRef2}
-        path="/assets/models/agriculture/pollen.glb"
+        path="assets/models/agriculture/pollen.glb"
         position={[-35, 25, 83]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
         scale={0.4}
