@@ -145,13 +145,14 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF("assets/models/agriculture/sunflowers.glb");
-  const modelPosition = [-300, 50, 300];
+  //const modelPosition = [-300, 50, 300];
+  const modelPosition = [60, 22, 175];
   // Set the desired rotation (in radians)
-  const rotation = [0, -180, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 29, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={20} />;
 };
 
 const ScreenshotCapture = () => {
@@ -188,6 +189,7 @@ const Agriculture = ({
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
   const barnRef = useRef();
+  const birdRef = useRef();
   const canRef = useRef();
   const pestRef = useRef();
   const pollenRef1 = useRef();
@@ -231,33 +233,46 @@ const Agriculture = ({
       if (!waterCan) return;
 
       const loader = new GLTFLoader();
-      loader.load("/assets/models/agriculture/water.glb", (gltf) => {
-        waterDroplet = gltf.scene;
+      loader.load(
+        `${import.meta.env.BASE_URL}assets/models/agriculture/water.glb`,
+        (gltf) => {
+          const waterDroplet = gltf.scene;
 
-        // Position the water droplet to appear below the can
-        const canPosition = new THREE.Vector3();
-        waterCan.getWorldPosition(canPosition);
+          // Position the water droplet below the can
+          const canPosition = new THREE.Vector3();
+          waterCan.getWorldPosition(canPosition);
 
-        waterDroplet.position.set(
-          canPosition.x,
-          canPosition.y - 1,
-          canPosition.z
-        ); // Adjust height as needed
-        waterDroplet.visible = true; // Make the droplet visible
-        GlobalScene.add(waterDroplet);
+          waterDroplet.position.set(
+            canPosition.x + 3,
+            canPosition.y,
+            canPosition.z
+          );
+          waterDroplet.scale.set(30, 30, 30);
+          waterDroplet.visible = true;
 
-        // Animate the water droplet falling
-        const animationSpeed = 0.1;
-        const intervalId = setInterval(() => {
-          waterDroplet.position.y -= animationSpeed;
+          GlobalScene.add(waterDroplet);
 
-          if (waterDroplet.position.y < -10) {
-            // Assuming ground level is at y = -10
-            GlobalScene.remove(waterDroplet); // Remove the droplet when it reaches the ground
-            clearInterval(intervalId);
-          }
-        }, 16); // 60 FPS
-      });
+          // Animate the water droplet falling
+          const animationSpeed = 0.09;
+          const intervalId = setInterval(() => {
+            waterDroplet.position.y -= animationSpeed;
+            console.log(
+              `Droplet falling at Y position: `,
+              waterDroplet.position.y
+            );
+
+            if (waterDroplet.position.y < -4) {
+              // Adjust ground level if needed
+              GlobalScene.remove(waterDroplet); // Remove the droplet when it reaches the ground
+              clearInterval(intervalId);
+            }
+          }, 16); // 60 FPS
+        },
+        undefined,
+        (error) => {
+          console.error("Failed to load water droplet model:", error);
+        }
+      );
     };
 
     emitter.on("commandPickupObject", handlePickup);
@@ -270,6 +285,50 @@ const Agriculture = ({
       emitter.off("commandSpray", handleSpray);
     };
   }, []);
+
+  useEffect(() => {
+    let birdFlyingInterval = null;
+    let birdHasFlown = false;
+
+    const handleBirdFlight = () => {
+      const drone = droneRef.current;
+      const bird = birdRef.current;
+
+      if (!drone || !bird || birdHasFlown) return;
+
+      const dronePosition = new THREE.Vector3();
+      const birdPosition = new THREE.Vector3();
+
+      drone.getWorldPosition(dronePosition);
+      bird.getWorldPosition(birdPosition);
+
+      const distance = dronePosition.distanceTo(birdPosition);
+
+      if (distance < 20 && !birdHasFlown) {
+        birdHasFlown = true;
+
+        let flightSpeed = 0.15;
+        birdFlyingInterval = setInterval(() => {
+          bird.position.y += flightSpeed;
+          bird.position.x += flightSpeed * 0.5;
+
+          if (bird.position.y > 40) {
+            // Adjust height limit if needed
+            clearInterval(birdFlyingInterval);
+            birdFlyingInterval = null;
+          }
+        }, 16);
+      }
+    };
+
+    const intervalId = setInterval(handleBirdFlight, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      if (birdFlyingInterval) clearInterval(birdFlyingInterval);
+    };
+  }, [droneRef, birdRef]);
+
   return (
     <Canvas
       shadows
@@ -293,22 +352,23 @@ const Agriculture = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.3}
-        cameraOffset={[0, 5, -18]}
+        droneScale={0.9}
+        cameraOffset={[-4, 8, -18]}
         lineColor={dronePathColor}
+        droneSpeed={0.6}
       />
-      {/*<SimpleModel
-        ref={waterRef}
-        path="/assets/models/agriculture/water.glb"
-        position={[10, 5, 10]}
-        scale={30}
-        //name="drop"
+      <SimpleModel
+        ref={birdRef}
+        path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
+        position={[15, 20, 55]}
+        scale={5}
+        name="bird1"
         enableMeasurement={measurementViewEnabled}
-      />*/}
+      />
       <SimpleModel
         ref={canRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/can.glb`}
-        position={[14, 1, 7]}
+        position={[14, 1, 1]}
         rotation={[0, Math.PI / 2, 0]}
         scale={5}
         name="watercan"
@@ -317,7 +377,7 @@ const Agriculture = ({
       <SimpleModel
         ref={barnRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/barn.glb`}
-        position={[18, 0, 10]}
+        position={[18, 0, 4]}
         scale={40}
         enableMeasurement={measurementViewEnabled}
       />
@@ -326,7 +386,7 @@ const Agriculture = ({
         path={`${
           import.meta.env.BASE_URL
         }assets/models/agriculture/pesticides.glb`}
-        position={[14, 1, 12]}
+        position={[14, 1, 6]}
         rotation={[0, Math.PI / 2, 0]}
         scale={3}
         name="pesticide"
@@ -335,18 +395,18 @@ const Agriculture = ({
       <SimpleModel
         ref={pollenRef1}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[-1, 25, 50]}
-        rotation={[0, 0, Math.PI / 2]}
-        scale={0.4}
+        position={[5.5, 10.5, 16]}
+        rotation={[0, Math.PI / 2, Math.PI / 2]}
+        scale={0.1}
         name="pollen1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={pollenRef2}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[-35, 25, 83]}
+        position={[-9, 13, 24]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
-        scale={0.4}
+        scale={0.1}
         name="pollen2"
         enableMeasurement={measurementViewEnabled}
       />

@@ -190,6 +190,8 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
   const trashcanRef = useRef();
   const bananaRef = useRef();
   const paperRef = useRef();
+  const alphabetRef1 = useRef();
+  const alphabetRef2 = useRef();
 
   useEffect(() => {
     const handlePickup = (objectName) => {
@@ -258,6 +260,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
         droneScale={0.5}
         cameraOffset={[-5.5, 5, -9]}
         lineColor={dronePathColor}
+        droneSpeed={0.1}
       />
       <SimpleModel
         ref={desktopRef1}
@@ -318,6 +321,22 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
         //rotation={[0, Math.PI, 0]}
         scale={2}
         name="paper"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={alphabetRef1}
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/alphabet1.glb`}
+        position={[-2.5, 0.5, 96.5]}
+        //rotation={[0, Math.PI, 0]}
+        scale={7}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={alphabetRef2}
+        path={`${import.meta.env.BASE_URL}assets/models/infotech/alphabet2.glb`}
+        position={[27, 0, 138.3]}
+        rotation={[0, 110, 0]}
+        scale={7}
         enableMeasurement={measurementViewEnabled}
       />
     </Canvas>

@@ -261,6 +261,7 @@ const Education = ({
         droneScale={0.8}
         cameraOffset={[5, 9, -12]}
         lineColor={dronePathColor}
+        //droneSpeed={0.3}
       />
       <SimpleModel
         ref={bookRef}
