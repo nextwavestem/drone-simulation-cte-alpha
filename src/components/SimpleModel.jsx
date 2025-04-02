@@ -48,8 +48,8 @@ const SimpleModel = forwardRef(
 
         {hovered && (
           <Text
-            position={[position[0] - 2, position[1] + 1, position[2] + 3]}
-            fontSize={0.8}
+            position={[position[0] - 6, position[1] + 5, position[2] + 3]}
+            fontSize={1}
             color="black"
             anchorX="center"
             anchorY="center"

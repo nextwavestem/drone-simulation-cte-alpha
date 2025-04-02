@@ -229,6 +229,11 @@ const BlockPad = () => {
       "dropObject",
       interpreter.createNativeFunction(dropObject)
     );
+    interpreter.setProperty(
+      globalObject,
+      "sprayObject",
+      interpreter.createNativeFunction(sprayObject)
+    );
   };
 
   const pickupObject = (name) => {
@@ -236,6 +241,9 @@ const BlockPad = () => {
   };
   const dropObject = (name) => {
     emitter.emit("commandDropObject", name);
+  };
+  const sprayObject = (name) => {
+    emitter.emit("commandSpray", name);
   };
 
   const captureImage = () => {

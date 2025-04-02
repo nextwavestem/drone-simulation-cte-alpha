@@ -139,7 +139,8 @@ export const toolbarConfig = {
       categorystyle: 'actions_category', // Add this style in COLORS too
       contents: [
         { kind: "block", type: "pickup_object" },
-        { kind: "block", type: "drop_object" }
+        { kind: "block", type: "drop_object" },
+        {kind: "block", type: "spray_object"}
       ]
     },    
     {
@@ -1005,5 +1006,19 @@ export const toolbarBlocksDefinitions = (Blockly) => {
       this.setHelpUrl("");
     }
   };
+
+  Blockly.Blocks['spray_object'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("spray")
+          .appendField(new Blockly.FieldTextInput("watercan"), "OBJECT_NAME");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.ACTIONS);
+      this.setTooltip("Spray water or pesticide from a can");
+      this.setHelpUrl("");
+    }
+  };
+
   
 };

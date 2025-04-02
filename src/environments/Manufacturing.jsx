@@ -10,6 +10,7 @@ import { Drone } from "../components/Drone.jsx";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
+import SimpleModel from "../components/SimpleModel";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -26,7 +27,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(10, 100, -50); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -101,8 +102,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       GlobalScene.add(line);
       lastPosition.copy(point); // Update lastPosition to the current intersection point
 
-      // Display the distance near the point
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      const coordinatesText = `X: ${point.x.toFixed(
+        2
+      )} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -127,7 +130,7 @@ const displayCoordinatesText = (text, position) => {
       });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
-      textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+      textMesh.lookAt(GlobalCamera.position);
 
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
@@ -139,15 +142,15 @@ const displayCoordinatesText = (text, position) => {
 };
 
 const Model = () => {
-  const { scene } = useGLTF("assets/models/manufacturing/boat.glb");
-  const modelPosition = [-50, -80, 180];
-
+  const { scene } = useGLTF("assets/models/manufacturing/workshop.glb");
+  //const modelPosition = [0, 0, 10];
+  const modelPosition = [0, 0, 60];
   // Set the desired rotation (in radians)
   const rotation = [0, 188, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={20} />;
 };
 
 const ScreenshotCapture = () => {
@@ -183,7 +186,55 @@ const Manufacturing = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
+  const carRef = useRef();
+  const fireRef = useRef();
+  const maskRef = useRef();
+  const trashcanRef = useRef();
+  const bananaRef = useRef();
+  const sawRef = useRef();
+  const screwdriverRef = useRef();
 
+  useEffect(() => {
+    const handlePickup = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      const dronePos = new THREE.Vector3();
+      const bookPos = new THREE.Vector3();
+      drone.getWorldPosition(dronePos);
+      book.getWorldPosition(bookPos);
+      const distance = dronePos.distanceTo(bookPos);
+
+      if (distance < 15) {
+        drone.attach(book);
+        book.position.set(0, -2, 0);
+        console.log(`Picked up ${objectName}`);
+      } else {
+        console.log(`${objectName} too far to pick up.`);
+      }
+    };
+
+    const handleDrop = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      GlobalScene.attach(book);
+      const dropPosition = new THREE.Vector3();
+      drone.getWorldPosition(dropPosition);
+      book.position.copy(dropPosition);
+      console.log(`Dropped ${objectName}`);
+    };
+
+    emitter.on("commandPickupObject", handlePickup);
+    emitter.on("commandDropObject", handleDrop);
+
+    return () => {
+      emitter.off("commandPickupObject", handlePickup);
+      emitter.off("commandDropObject", handleDrop);
+    };
+  }, []);
   return (
     <Canvas
       shadows
@@ -207,9 +258,68 @@ const Manufacturing = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.5}
-        cameraOffset={[0, 20, -38]}
+        droneScale={0.9}
+        cameraOffset={[25, 25, -35]}
         lineColor={dronePathColor}
+      />
+      <SimpleModel
+        ref={carRef}
+        path="/assets/models/manufacturing/car.glb"
+        position={[-30, 16, 30]}
+        rotation={[0, Math.PI - 10, 0]}
+        scale={0.09}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={fireRef}
+        path="/assets/models/manufacturing/fire.glb"
+        position={[17, 16, 80]}
+        rotation={[0, Math.PI - 10, 0]}
+        scale={0.02}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={maskRef}
+        path="/assets/models/manufacturing/mask.glb"
+        position={[-80, 30, 20]}
+        rotation={[0, Math.PI, 0]}
+        scale={30}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={trashcanRef}
+        path="/assets/models/infotech/trashcan.glb"
+        position={[-68, 0, 0]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={12}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={bananaRef}
+        path="/assets/models/infotech/banana.glb"
+        position={[-30, 0, -40]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={15}
+        name="peel"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={sawRef}
+        path="/assets/models/manufacturing/saw.glb"
+        position={[-10, 0, 80]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={2}
+        name="saw"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={screwdriverRef}
+        path="/assets/models/manufacturing/screwdriver.glb"
+        position={[15, 10, 10]}
+        rotation={[0, Math.PI / 8, 0]}
+        scale={10}
+        name="screwdriver"
+        enableMeasurement={measurementViewEnabled}
       />
     </Canvas>
   );

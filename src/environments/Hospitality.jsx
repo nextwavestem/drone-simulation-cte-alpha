@@ -10,6 +10,7 @@ import { Drone } from "../components/Drone.jsx";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
+import SimpleModel from "../components/SimpleModel";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -26,7 +27,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(5, 50, -3); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -98,8 +99,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       const line = new THREE.Line(lineGeometry, lineMaterial);
       GlobalScene.add(line);
       lastPosition.copy(point);
-
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      const coordinatesText = `X: ${point.x.toFixed(
+        2
+      )} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -110,7 +113,7 @@ const displayCoordinatesText = (text, position) => {
     (font) => {
       const textGeometry = new TextGeometry(text, {
         font: font,
-        size: 0.9,
+        size: 1,
         height: 0.09,
         curveSegments: 1,
         bevelEnabled: false,
@@ -124,8 +127,8 @@ const displayCoordinatesText = (text, position) => {
       });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z);
-      textMesh.rotation.x = -Math.PI / 2;
-
+      //textMesh.rotation.x = -Math.PI / 2;
+      textMesh.lookAt(GlobalCamera.position);
       GlobalScene.add(textMesh);
     },
     undefined,
@@ -136,23 +139,23 @@ const displayCoordinatesText = (text, position) => {
 };
 
 const Model = () => {
-  const { scene } = useGLTF("assets/models/hospitality/environment.glb");
+  const { scene } = useGLTF("assets/models/hospitality/room1.glb");
   console.log("Loaded GLB scene:", scene);
-  /*const modelPosition = [10, -10, 0];
-  const rotation = [0, 240, 0];
+  const modelPosition = [0, -80, 10];
+  const rotation = [0, 180, 0];
 
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;*/
+  return <primitive object={scene} position={modelPosition} scale={50} />;
   const box = new THREE.Box3().setFromObject(scene);
   console.log("Model Bounding Box Min:", box.min);
   console.log("Model Bounding Box Max:", box.max);
 
   // Ensure the model is properly positioned and scaled
-  scene.scale.set(1, 1, 1);
+  //scene.scale.set(1, 1, 1);
 
   // Center the model at (0, 0, 0)
-  scene.position.set(0, -10, 0);
-  scene.rotation.set(0, 0, 0);
+  scene.position.set(0, 0, 0);
+  //scene.rotation.set(0, 0, 0);
 
   return <primitive object={scene} />;
 };
@@ -189,7 +192,54 @@ const Hospitality = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]);
+  const cushionRef1 = useRef();
+  const cushionRef2 = useRef();
+  const walletRef = useRef();
+  const trashcanRef = useRef();
+  const bananaRef = useRef();
+  const lostRef = useRef();
 
+  useEffect(() => {
+    const handlePickup = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      const dronePos = new THREE.Vector3();
+      const bookPos = new THREE.Vector3();
+      drone.getWorldPosition(dronePos);
+      book.getWorldPosition(bookPos);
+      const distance = dronePos.distanceTo(bookPos);
+
+      if (distance < 15) {
+        drone.attach(book);
+        book.position.set(0, -2, 0);
+        console.log(`Picked up ${objectName}`);
+      } else {
+        console.log(`${objectName} too far to pick up.`);
+      }
+    };
+
+    const handleDrop = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      GlobalScene.attach(book);
+      const dropPosition = new THREE.Vector3();
+      drone.getWorldPosition(dropPosition);
+      book.position.copy(dropPosition);
+      console.log(`Dropped ${objectName}`);
+    };
+
+    emitter.on("commandPickupObject", handlePickup);
+    emitter.on("commandDropObject", handleDrop);
+
+    return () => {
+      emitter.off("commandPickupObject", handlePickup);
+      emitter.off("commandDropObject", handleDrop);
+    };
+  }, []);
   return (
     <Canvas
       shadows
@@ -211,9 +261,63 @@ const Hospitality = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.3}
-        cameraOffset={[0, 20, -18]}
+        droneScale={2}
+        cameraOffset={[10, 20, -20]}
         lineColor={dronePathColor}
+      />
+      <SimpleModel
+        ref={cushionRef1}
+        path="/assets/models/hospitality/cushion.glb"
+        position={[-20, -30, 6]}
+        rotation={[0, Math.PI + 45, 0]}
+        scale={20}
+        name="cushion1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={walletRef}
+        path="/assets/models/hospitality/wallet.glb"
+        position={[20, -10, 50]}
+        rotation={[0, Math.PI / 4, 0]}
+        scale={0.5}
+        name="wallet"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={cushionRef2}
+        path="/assets/models/hospitality/cushion.glb"
+        position={[-45, -30, 6]}
+        rotation={[0, Math.PI + 45, 0]}
+        scale={20}
+        name="cushion2"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={trashcanRef}
+        path="/assets/models/infotech/trashcan.glb"
+        position={[0, -35, 50]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={20}
+        //name="trashcan"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={bananaRef}
+        path="/assets/models/infotech/banana.glb"
+        position={[-30, -35, 50]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={20}
+        name="peel"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={lostRef}
+        path="/assets/models/hospitality/lost.glb"
+        position={[-20, -30, 80]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={70}
+        name="LostandFound"
+        enableMeasurement={measurementViewEnabled}
       />
     </Canvas>
   );

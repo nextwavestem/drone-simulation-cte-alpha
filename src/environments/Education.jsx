@@ -208,9 +208,9 @@ const Education = ({
       if (distance < 15) {
         drone.attach(book);
         book.position.set(0, -2, 0);
-        console.log(`✅ Picked up ${objectName}`);
+        console.log(`Picked up ${objectName}`);
       } else {
-        console.log(`❌ ${objectName} too far to pick up.`);
+        console.log(`${objectName} too far to pick up.`);
       }
     };
 
@@ -223,7 +223,7 @@ const Education = ({
       const dropPosition = new THREE.Vector3();
       drone.getWorldPosition(dropPosition);
       book.position.copy(dropPosition);
-      console.log(`📦 Dropped ${objectName}`);
+      console.log(`Dropped ${objectName}`);
     };
 
     emitter.on("commandPickupObject", handlePickup);
@@ -302,21 +302,21 @@ const Education = ({
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/education/trashcan.glb"
+        path="/assets/models/infotech/trashcan.glb"
         position={[-9, -10, -2]}
         scale={4}
         name="trashcan"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/education/paper.glb"
+        path="/assets/models/infotech/paper.glb"
         position={[-7, -10, 48]}
         scale={1}
         name="trash1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        path="/assets/models/education/paper.glb"
+        path="/assets/models/infotech/paper.glb"
         position={[-27, -10, 3]}
         scale={1}
         name="trash2"

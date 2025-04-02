@@ -210,6 +210,13 @@ export const toolbarFunctionHandler = () => {
         const objectName = block.getFieldValue('OBJECT_NAME');
         return `dropObject('${objectName}');`;
       };
+
+      javascriptGenerator.forBlock['spray_object'] = function(block) {
+        const objectName = block.getFieldValue('OBJECT_NAME');
+        return `sprayObject('${objectName}');`;
+    };
+    
+      
       
 }
 

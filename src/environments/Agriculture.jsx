@@ -3,6 +3,7 @@
 
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import * as THREE from "three";
@@ -10,6 +11,7 @@ import { Drone } from "../components/Drone.jsx";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
+import SimpleModel from "../components/SimpleModel";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -102,7 +104,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       lastPosition.copy(point); // Update lastPosition to the current intersection point
 
       // Display the distance near the point
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      const coordinatesText = `X: ${point.x.toFixed(
+        2
+      )} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -127,8 +132,8 @@ const displayCoordinatesText = (text, position) => {
       });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
-      textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
-
+      //textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+      textMesh.lookAt(GlobalCamera.position);
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
     undefined,
@@ -140,8 +145,7 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF("assets/models/agriculture/sunflowers.glb");
-  const modelPosition = [-300, 0, 300];
-
+  const modelPosition = [-300, 50, 300];
   // Set the desired rotation (in radians)
   const rotation = [0, -180, 0]; // Example: Rotate 45 degrees around the Y-axis
 
@@ -183,7 +187,89 @@ const Agriculture = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
+  const barnRef = useRef();
+  const canRef = useRef();
+  const pestRef = useRef();
+  const pollenRef1 = useRef();
+  const pollenRef2 = useRef();
 
+  useEffect(() => {
+    let waterDroplet;
+    const handlePickup = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      const dronePos = new THREE.Vector3();
+      const bookPos = new THREE.Vector3();
+      drone.getWorldPosition(dronePos);
+      book.getWorldPosition(bookPos);
+      const distance = dronePos.distanceTo(bookPos);
+
+      if (distance < 15) {
+        drone.attach(book);
+        book.position.set(0, -2, 0);
+        console.log(`Picked up ${objectName}`);
+      } else {
+        console.log(`${objectName} too far to pick up.`);
+      }
+    };
+
+    const handleDrop = (objectName) => {
+      const drone = droneRef.current;
+      const book = GlobalScene.getObjectByName(objectName);
+      if (!drone || !book) return;
+
+      GlobalScene.attach(book);
+      const dropPosition = new THREE.Vector3();
+      drone.getWorldPosition(dropPosition);
+      book.position.copy(dropPosition);
+      console.log(`Dropped ${objectName}`);
+    };
+    const handleSpray = () => {
+      const waterCan = canRef.current; // Access the watercan reference
+      if (!waterCan) return;
+
+      const loader = new GLTFLoader();
+      loader.load("/assets/models/agriculture/water.glb", (gltf) => {
+        waterDroplet = gltf.scene;
+
+        // Position the water droplet to appear below the can
+        const canPosition = new THREE.Vector3();
+        waterCan.getWorldPosition(canPosition);
+
+        waterDroplet.position.set(
+          canPosition.x,
+          canPosition.y - 1,
+          canPosition.z
+        ); // Adjust height as needed
+        waterDroplet.visible = true; // Make the droplet visible
+        GlobalScene.add(waterDroplet);
+
+        // Animate the water droplet falling
+        const animationSpeed = 0.1;
+        const intervalId = setInterval(() => {
+          waterDroplet.position.y -= animationSpeed;
+
+          if (waterDroplet.position.y < -10) {
+            // Assuming ground level is at y = -10
+            GlobalScene.remove(waterDroplet); // Remove the droplet when it reaches the ground
+            clearInterval(intervalId);
+          }
+        }, 16); // 60 FPS
+      });
+    };
+
+    emitter.on("commandPickupObject", handlePickup);
+    emitter.on("commandDropObject", handleDrop);
+    emitter.on("commandSpray", handleSpray);
+
+    return () => {
+      emitter.off("commandPickupObject", handlePickup);
+      emitter.off("commandDropObject", handleDrop);
+      emitter.off("commandSpray", handleSpray);
+    };
+  }, []);
   return (
     <Canvas
       shadows
@@ -208,8 +294,59 @@ const Agriculture = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={0.3}
-        cameraOffset={[0, 20, -18]}
+        cameraOffset={[0, 5, -18]}
         lineColor={dronePathColor}
+      />
+      {/*<SimpleModel
+        ref={waterRef}
+        path="/assets/models/agriculture/water.glb"
+        position={[10, 5, 10]}
+        scale={30}
+        //name="drop"
+        enableMeasurement={measurementViewEnabled}
+      />*/}
+      <SimpleModel
+        ref={canRef}
+        path="/assets/models/agriculture/can.glb"
+        position={[14, 1, 7]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={5}
+        name="watercan"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={barnRef}
+        path="/assets/models/agriculture/barn.glb"
+        position={[18, 0, 10]}
+        scale={40}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={pestRef}
+        path="/assets/models/agriculture/pesticides.glb"
+        position={[14, 1, 12]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={3}
+        name="pesticide"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={pollenRef1}
+        path="/assets/models/agriculture/pollen.glb"
+        position={[-1, 25, 50]}
+        rotation={[0, 0, Math.PI / 2]}
+        scale={0.4}
+        name="pollen1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={pollenRef2}
+        path="/assets/models/agriculture/pollen.glb"
+        position={[-35, 25, 83]}
+        rotation={[0, Math.PI / 2, Math.PI / 2]}
+        scale={0.4}
+        name="pollen2"
+        enableMeasurement={measurementViewEnabled}
       />
     </Canvas>
   );
