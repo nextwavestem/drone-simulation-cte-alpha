@@ -7,8 +7,8 @@ Welcome to NextWaveSTEM Drone Simulation! This repository contains various theme
 4 - Education \
 5 - Engineering \
 6 - HealthScience \
-7 - HumanServices \ 
+7 - HumanServices \
 8 - Information Technology \
 9 - Agriculture \
 10 - Manufacturing \
-11 - Hospitality \
+11 - Hospitality
