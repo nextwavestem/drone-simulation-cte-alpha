@@ -10,5 +10,5 @@ Welcome to NextWaveSTEM Drone Simulation! This repository contains various theme
 7 - HumanServices
 8 - Information Technology
 9 - Agriculture
-10 - Manufacturing \
+10 - Manufacturing
 11 - Hospitality
