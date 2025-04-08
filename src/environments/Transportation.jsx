@@ -132,7 +132,7 @@ const displayCoordinatesText = (text, position) => {
 
 
 const Model = () => {
-  const { scene } = useGLTF('assets/models/transportation/future_city.glb'); 
+  const { scene } = useGLTF('assets/models/transportation/future_city_compressed.glb'); 
   const modelPosition = [10, -10, 0];
 
   // Set the desired rotation (in radians)
