@@ -18,7 +18,7 @@ let lastPosition = null;
 let measurementLineColor = "white";
 let measurementPinColor = "black";
 let dronePathColor = "yellow"
-let measurementTextColor="black"
+let measurementTextColor="yellow"
 
 const CameraController = ({ measurementViewEnabled }) => {
   const { camera, gl, scene } = useThree();
@@ -26,7 +26,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(0, 100, -3); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -98,9 +98,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       const line = new THREE.Line(lineGeometry, lineMaterial);
       GlobalScene.add(line);
       lastPosition.copy(point); // Update lastPosition to the current intersection point
+      const coordinatesText = `X: ${point.x.toFixed(2)} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
 
       // Display the distance near the point
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -133,10 +134,10 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF('assets/models/transportation/future_city_compressed.glb'); 
-  const modelPosition = [10, -10, 0];
+  const modelPosition = [-200, -5, 90];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 0, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
@@ -182,7 +183,7 @@ const Transportation = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
-      <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
+      <color attach="background" args={['#fffffff']} /> {/* Set background color */}
 
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
@@ -197,7 +198,7 @@ const Transportation = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={0.3}
-        cameraOffset={[0,20,-18]}
+        cameraOffset={[0, 5, -20]}
         lineColor={dronePathColor}
       />
   </Canvas>

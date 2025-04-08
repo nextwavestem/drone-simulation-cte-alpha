@@ -33,6 +33,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/agriculture" element={<DroneAgricultureSimulator />} />
         <Route path="/slate" element={<DroneSlateSimulator />} />
         <Route path="/manufacturing" element={<DroneManufacturingSimulator />} />
+        <Route path="/law" element={<DroneManufacturingSimulator />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>
