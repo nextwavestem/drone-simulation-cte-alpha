@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls, Environment, useGLTF } from "@react-three/drei";
+import { OrbitControls, Environment, useGLTF, Text } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import * as THREE from "three";
@@ -10,6 +10,7 @@ import { Drone } from "../components/Drone.jsx";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
+import SimpleModel from "../components/SimpleModel";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -101,8 +102,10 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
       GlobalScene.add(line);
       lastPosition.copy(point); // Update lastPosition to the current intersection point
 
-      // Display the distance near the point
-      displayCoordinatesText(`${distance.toFixed(2)} cm`, point);
+      const coordinatesText = `X: ${point.x.toFixed(
+        2
+      )} cm, Y: ${point.y.toFixed(2)} cm, Z: ${point.z.toFixed(2)} cm`;
+      displayCoordinatesText(coordinatesText, point);
     }
   }
 };
@@ -127,7 +130,7 @@ const displayCoordinatesText = (text, position) => {
       });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
-      textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
+      //textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
 
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
@@ -140,14 +143,14 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF("assets/models/architecture/museum.glb");
-  const modelPosition = [300, -250, 30];
+  const modelPosition = [50, -70, -130];
 
   // Set the desired rotation (in radians)
   const rotation = [0, 220, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={15} />;
 };
 
 const ScreenshotCapture = () => {
@@ -183,6 +186,11 @@ const Architecture = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
+  const childRef = useRef();
+  const frameRef = useRef();
+  const firstaidRef = useRef();
+  const walletRef = useRef();
+  const fireRef = useRef();
 
   return (
     <Canvas
@@ -197,6 +205,94 @@ const Architecture = ({
       {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
       <Model />
+      <Text
+        position={[-80, 30, -200]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Serving Room
+      </Text>
+      <Text
+        position={[-80, 30, -100]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Dining Room
+      </Text>
+      <Text
+        position={[-10, 30, 50]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Upper Vestibule
+      </Text>
+      <Text
+        position={[-10, -50, 50]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Lower Vestibule
+      </Text>
+      <Text
+        position={[-50, 30, 160]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Small Drawing Room
+      </Text>
+      <Text
+        position={[80, 30, 40]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Morning Room
+      </Text>
+      <Text
+        position={[80, 30, 140]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Great Drawing Room
+      </Text>
+      <Text
+        position={[230, 20, 140]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Smoking Room
+      </Text>
+      <Text
+        position={[200, 20, 40]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Armoury
+      </Text>
+      <Text
+        position={[210, 20, -100]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Billiard Room
+      </Text>
+      <Text
+        position={[200, 10, -200]}
+        fontSize={5}
+        color="white"
+        rotation={[0, Math.PI, 0]}
+      >
+        The Porcelain Room
+      </Text>
       {pins.map((pin, index) => (
         <Pin key={index} position={pin} />
       ))}
@@ -207,10 +303,51 @@ const Architecture = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.4}
-        cameraOffset={[0, 10, -15]}
+        droneScale={0.6}
+        cameraOffset={[0, 10, -13]}
         lineColor={dronePathColor}
-        droneSpeed={0.9}
+        droneSpeed={0.4}
+      />
+      <SimpleModel
+        ref={childRef}
+        path={`${import.meta.env.BASE_URL}assets/models/architecture/child.glb`}
+        position={[160, -5, -200]}
+        scale={20}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={firstaidRef}
+        path={`${
+          import.meta.env.BASE_URL
+        }assets/models/architecture/first_aid.glb`}
+        position={[-35, 10, -200]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={40}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={frameRef}
+        path={`${import.meta.env.BASE_URL}assets/models/architecture/frame.glb`}
+        position={[0, -10, 70]}
+        rotation={[-90, 0, 0]}
+        scale={2}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={walletRef}
+        path={`${import.meta.env.BASE_URL}assets/models/hospitality/wallet.glb`}
+        position={[170, 10, 70]}
+        rotation={[0, 0, 0]}
+        scale={0.4}
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={fireRef}
+        path={`${import.meta.env.BASE_URL}assets/models/manufacturing/fire.glb`}
+        position={[3, 20, 170]}
+        rotation={[0, 140, 0]}
+        scale={0.03}
+        enableMeasurement={measurementViewEnabled}
       />
     </Canvas>
   );

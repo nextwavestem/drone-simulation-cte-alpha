@@ -26,6 +26,8 @@ Blockly.setLocale(En);
 const BlockPad = () => {
   const [isModalOpen, setModalOpen] = useState(false);
 
+  const [showNote, setShowNote] = useState(false);
+
   const toggleModal = () => {
     setModalOpen(!isModalOpen);
   };
@@ -54,6 +56,7 @@ const BlockPad = () => {
     setToggleValue((prevValue) => {
       const newVal = !prevValue;
       emitter.emit("mouseControlEnabled", newVal);
+      setShowNote(newVal);
       return newVal;
     });
   };
@@ -132,12 +135,40 @@ const BlockPad = () => {
     runLoop(arrayCommands.length);
   };
 
+  const runFunctionSimulator = () => {
+    var code = javascriptGenerator.workspaceToCode(
+      Blockly.getMainWorkspace().current
+    );
+
+    if (code.includes("function")) {
+      console.log("Executing Function Simulator...");
+      console.log(code);
+
+      const interpreter = new Interpreter(code, initInterpreter);
+
+      const step = () => {
+        if (interpreter.step()) {
+          // Add delay between steps (e.g., 200ms)
+          setTimeout(step, 500);
+        } else {
+          console.log("Function Execution Completed");
+        }
+      };
+
+      step();
+    } else {
+      console.log("No function found, skipping function simulator.");
+    }
+  };
+
   const runSimulator = () => {
     var code = javascriptGenerator.workspaceToCode(
       Blockly.getMainWorkspace().current
     );
 
-    if (isIfStatement(code)) {
+    if (code.includes("function")) {
+      runFunctionSimulator();
+    } else if (isIfStatement(code)) {
       runPlainSimulator();
     } else if (isForLoop(code)) {
       runForSimulator();
@@ -293,6 +324,7 @@ const BlockPad = () => {
       zoom: {
         controls: true,
         wheel: true,
+        startScale: 0.9,
       },
       grid: {
         spacing: 20,
@@ -334,7 +366,17 @@ const BlockPad = () => {
       </div>
 
       <div ref={blocklyDiv} className="blockly-area" />
-
+      {showNote && (
+        <div className="note-box">
+          <p>
+            ⚠️ <strong>Note:</strong> Enabling mouse control disables the
+            default camera perspective of the drone.
+          </p>
+          <button className="close-btn" onClick={() => setShowNote(false)}>
+            ✖
+          </button>
+        </div>
+      )}
       {isModalOpen && (
         <div className="blockly-modal">
           <div className="blockly-modal-content">
