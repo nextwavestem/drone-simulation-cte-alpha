@@ -2,7 +2,13 @@
 /* eslint-disable react/no-unknown-property */
 
 import { Canvas, useThree } from "@react-three/fiber";
-import { OrbitControls, Environment, useGLTF, Text } from "@react-three/drei";
+import {
+  OrbitControls,
+  Environment,
+  useGLTF,
+  Text,
+  Billboard,
+} from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import * as THREE from "three";
@@ -27,7 +33,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(0, 450, -200); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -116,7 +122,7 @@ const displayCoordinatesText = (text, position) => {
     (font) => {
       const textGeometry = new TextGeometry(text, {
         font: font,
-        size: 0.9, // Adjust size as needed
+        size: 2, // Adjust size as needed
         height: 0.09, // Adjust height
         curveSegments: 1,
         bevelEnabled: false,
@@ -131,7 +137,8 @@ const displayCoordinatesText = (text, position) => {
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
       //textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
-
+      textMesh.quaternion.copy(GlobalCamera.quaternion);
+      textMesh.lookAt(GlobalCamera.position);
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
     undefined,
@@ -205,94 +212,156 @@ const Architecture = ({
       {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
       <Model />
-      <Text
-        position={[-80, 30, -200]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Serving Room
-      </Text>
-      <Text
-        position={[-80, 30, -100]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Dining Room
-      </Text>
-      <Text
-        position={[-10, 30, 50]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Upper Vestibule
-      </Text>
-      <Text
-        position={[-10, -50, 50]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Lower Vestibule
-      </Text>
-      <Text
-        position={[-50, 30, 160]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Small Drawing Room
-      </Text>
-      <Text
-        position={[80, 30, 40]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Morning Room
-      </Text>
-      <Text
-        position={[80, 30, 140]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Great Drawing Room
-      </Text>
-      <Text
-        position={[230, 20, 140]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Smoking Room
-      </Text>
-      <Text
-        position={[200, 20, 40]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Armoury
-      </Text>
-      <Text
-        position={[210, 20, -100]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Billiard Room
-      </Text>
-      <Text
-        position={[200, 10, -200]}
-        fontSize={5}
-        color="white"
-        rotation={[0, Math.PI, 0]}
-      >
-        The Porcelain Room
-      </Text>
+      {measurementViewEnabled ? (
+        <>
+          <Billboard>
+            <Text position={[60, -150, 140]} fontSize={7} color="black">
+              The Serving Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[50, -40, 140]} fontSize={7} color="black">
+              The Dining Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[20, 20, 140]} fontSize={7} color="black">
+              The Upper Vestibule
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-10, -50, 50]} fontSize={5} color="black">
+              The Lower Vestibule
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[30, 130, 160]} fontSize={7} color="black">
+              The Small Drawing Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-60, 20, 160]} fontSize={5} color="black">
+              The Morning Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-60, 130, 160]} fontSize={7} color="black">
+              The Great Drawing Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-150, 130, 160]} fontSize={5} color="black">
+              The Smoking Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-130, 40, 140]} fontSize={7} color="black">
+              The Armoury
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-150, -60, 140]} fontSize={7} color="black">
+              The Billiard Room
+            </Text>
+          </Billboard>
+          <Billboard>
+            <Text position={[-150, -150, 140]} fontSize={7} color="black">
+              The Porcelain Room
+            </Text>
+          </Billboard>
+        </>
+      ) : (
+        <>
+          <Text
+            position={[-80, 30, -200]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Serving Room
+          </Text>
+          <Text
+            position={[-80, 30, -100]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Dining Room
+          </Text>
+          <Text
+            position={[-10, 30, 50]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Upper Vestibule
+          </Text>
+          <Text
+            position={[-10, -50, 50]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Lower Vestibule
+          </Text>
+          <Text
+            position={[-50, 30, 160]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Small Drawing Room
+          </Text>
+          <Text
+            position={[80, 30, 40]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Morning Room
+          </Text>
+          <Text
+            position={[80, 30, 140]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Great Drawing Room
+          </Text>
+          <Text
+            position={[230, 20, 140]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Smoking Room
+          </Text>
+          <Text
+            position={[200, 20, 40]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Armoury
+          </Text>
+          <Text
+            position={[210, 20, -100]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Billiard Room
+          </Text>
+          <Text
+            position={[200, 10, -200]}
+            fontSize={5}
+            color="black"
+            rotation={[0, Math.PI, 0]}
+          >
+            The Porcelain Room
+          </Text>
+        </>
+      )}
       {pins.map((pin, index) => (
         <Pin key={index} position={pin} />
       ))}

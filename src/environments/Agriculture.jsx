@@ -28,7 +28,7 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.position.set(5, 100, -5); // Move camera to top-down view
       camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
@@ -118,7 +118,7 @@ const displayCoordinatesText = (text, position) => {
     (font) => {
       const textGeometry = new TextGeometry(text, {
         font: font,
-        size: 0.9, // Adjust size as needed
+        size: 2, // Adjust size as needed
         height: 0.09, // Adjust height
         curveSegments: 1,
         bevelEnabled: false,
@@ -133,7 +133,9 @@ const displayCoordinatesText = (text, position) => {
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
       textMesh.position.set(position.x, position.y + 0.4, position.z); // Adjust Y position slightly above the line point
       //textMesh.rotation.x = -Math.PI / 2; // Rotate 90 degrees around the X-axis
-      textMesh.lookAt(GlobalCamera.position);
+      //textMesh.lookAt(GlobalCamera.position);
+      textMesh.quaternion.copy(GlobalCamera.quaternion);
+
       GlobalScene.add(textMesh); // Add the text mesh to the scene
     },
     undefined,
@@ -146,7 +148,7 @@ const displayCoordinatesText = (text, position) => {
 const Model = () => {
   const { scene } = useGLTF("assets/models/agriculture/sunflowers.glb");
   //const modelPosition = [-300, 50, 300];
-  const modelPosition = [60, 22, 175];
+  const modelPosition = [60, 20, 175];
   // Set the desired rotation (in radians)
   const rotation = [0, 29, 0]; // Example: Rotate 45 degrees around the Y-axis
 
@@ -210,7 +212,7 @@ const Agriculture = ({
 
       if (distance < 15) {
         drone.attach(book);
-        book.position.set(0, -2, 0);
+        book.position.set(0, 2, 0);
         console.log(`Picked up ${objectName}`);
       } else {
         console.log(`${objectName} too far to pick up.`);
@@ -360,7 +362,7 @@ const Agriculture = ({
       <SimpleModel
         ref={birdRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
-        position={[15, 20, 55]}
+        position={[15, 18, 55]}
         scale={5}
         name="bird1"
         enableMeasurement={measurementViewEnabled}
@@ -368,7 +370,7 @@ const Agriculture = ({
       <SimpleModel
         ref={canRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/can.glb`}
-        position={[14, 1, 1]}
+        position={[14, -1, 1]}
         rotation={[0, Math.PI / 2, 0]}
         scale={5}
         name="watercan"
@@ -377,7 +379,7 @@ const Agriculture = ({
       <SimpleModel
         ref={barnRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/barn.glb`}
-        position={[18, 0, 4]}
+        position={[18, -2, 4]}
         scale={40}
         enableMeasurement={measurementViewEnabled}
       />
@@ -386,7 +388,7 @@ const Agriculture = ({
         path={`${
           import.meta.env.BASE_URL
         }assets/models/agriculture/pesticides.glb`}
-        position={[14, 1, 6]}
+        position={[14, -1, 6]}
         rotation={[0, Math.PI / 2, 0]}
         scale={3}
         name="pesticide"
@@ -395,7 +397,7 @@ const Agriculture = ({
       <SimpleModel
         ref={pollenRef1}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[5.5, 10.5, 16]}
+        position={[5.5, 8.5, 16]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
         scale={0.1}
         name="pollen1"
@@ -404,7 +406,7 @@ const Agriculture = ({
       <SimpleModel
         ref={pollenRef2}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[-9, 13, 24]}
+        position={[-9, 11, 24]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
         scale={0.1}
         name="pollen2"

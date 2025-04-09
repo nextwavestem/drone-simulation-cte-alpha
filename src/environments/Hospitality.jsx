@@ -213,7 +213,7 @@ const Hospitality = ({
 
       if (distance < 15) {
         drone.attach(book);
-        book.position.set(0, -2, 0);
+        book.position.set(0, 2, 0);
         console.log(`Picked up ${objectName}`);
       } else {
         console.log(`${objectName} too far to pick up.`);
