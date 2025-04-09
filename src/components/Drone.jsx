@@ -365,9 +365,7 @@ export const Drone = React.forwardRef(
 
     useEffect(() => {
       // Register event listener
-      const handleAdvertiseText = (text) => {
-        flyerText = text;
-      }
+
 
       emitter.on("commandFlyFoward", droneMovePositiveZ);
       emitter.on("commandFlyBackward", droneMoveNegativeZ);
@@ -378,7 +376,6 @@ export const Drone = React.forwardRef(
       emitter.on("commandFlyTo", moveToPosition);
       emitter.on("commandRotate", rotateDrone);
       emitter.on("resetSimulationEnv", resetDrone);
-      emitter.on('commandAdvertiseText', handleAdvertiseText);
       
       emitter.on("commandSetWaitTime", stallAndFly);
       emitter.on("commandSetSpeed", updateDroneSpeed);
@@ -404,12 +401,10 @@ export const Drone = React.forwardRef(
         emitter.off("commandFlyTo", moveToPosition);
         emitter.off("commandRotate", rotateDrone);
         emitter.on("resetSimulationEnv", resetDrone);
-        emitter.on('commandAdvertiseText', handleAdvertiseText);
 
         emitter.off("commandSetWaitTime", stallAndFly);
         emitter.off("commandSetSpeed", updateDroneSpeed);
         emitter.off("commandFlip", flipDrone);
-        emitter.off('commandAdvertiseText', handleAdvertiseText);
 
         window.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("keyup", handleKeyUp);
