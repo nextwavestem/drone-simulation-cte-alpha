@@ -140,7 +140,8 @@ export const toolbarConfig = {
       contents: [
         { kind: "block", type: "pickup_object" },
         { kind: "block", type: "drop_object" },
-        {kind: "block", type: "spray_object"}
+        {kind: "block", type: "spray_object"},
+        {kind: "block", type: "advertise_text"}
       ]
     },    
     {
@@ -1020,5 +1021,16 @@ export const toolbarBlocksDefinitions = (Blockly) => {
     }
   };
 
-  
+  Blockly.Blocks['advertise_text'] = {
+    init: function() {
+      this.appendDummyInput()
+          .appendField("advertise")
+          .appendField(new Blockly.FieldTextInput("Sale"), "ADV_TEXT");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
+      this.setColour(COLORS.ACTIONS);
+      this.setTooltip("Text for drone flyer");
+      this.setHelpUrl("");
+    }
+  };
 };

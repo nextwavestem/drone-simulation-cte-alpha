@@ -265,6 +265,11 @@ const BlockPad = () => {
       "sprayObject",
       interpreter.createNativeFunction(sprayObject)
     );
+    interpreter.setProperty(
+      globalObject,
+      "advertiseText",
+      interpreter.createNativeFunction(advertiseText)
+    );
   };
 
   const pickupObject = (name) => {
@@ -276,6 +281,10 @@ const BlockPad = () => {
   const sprayObject = (name) => {
     emitter.emit("commandSpray", name);
   };
+
+  const advertiseText = (text) => {
+    emitter.emit("commandAdvertiseText", text);
+  }
 
   const captureImage = () => {
     emitter.emit("commandTakeScreenShot");

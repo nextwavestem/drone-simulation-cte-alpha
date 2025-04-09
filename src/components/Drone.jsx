@@ -6,7 +6,7 @@
 
 import * as THREE from "three";
 import PropTypes from "prop-types";
-import { useGLTF, Line } from "@react-three/drei";
+import { useGLTF, Line, Text } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import emitter from "../config/eventEmmiter";
@@ -33,6 +33,7 @@ export const Drone = React.forwardRef(
       droneScale,
       cameraOffset,
       lineColor,
+      flyerText,
       droneSpeed = 0.033333333332,
     },
     ref
@@ -364,6 +365,10 @@ export const Drone = React.forwardRef(
 
     useEffect(() => {
       // Register event listener
+      const handleAdvertiseText = (text) => {
+        flyerText = text;
+      }
+
       emitter.on("commandFlyFoward", droneMovePositiveZ);
       emitter.on("commandFlyBackward", droneMoveNegativeZ);
       emitter.on("commandFlyUp", droneMovePositiveY);
@@ -373,7 +378,8 @@ export const Drone = React.forwardRef(
       emitter.on("commandFlyTo", moveToPosition);
       emitter.on("commandRotate", rotateDrone);
       emitter.on("resetSimulationEnv", resetDrone);
-
+      emitter.on('commandAdvertiseText', handleAdvertiseText);
+      
       emitter.on("commandSetWaitTime", stallAndFly);
       emitter.on("commandSetSpeed", updateDroneSpeed);
       emitter.on("commandFlip", flipDrone);
@@ -398,10 +404,12 @@ export const Drone = React.forwardRef(
         emitter.off("commandFlyTo", moveToPosition);
         emitter.off("commandRotate", rotateDrone);
         emitter.on("resetSimulationEnv", resetDrone);
+        emitter.on('commandAdvertiseText', handleAdvertiseText);
 
         emitter.off("commandSetWaitTime", stallAndFly);
         emitter.off("commandSetSpeed", updateDroneSpeed);
         emitter.off("commandFlip", flipDrone);
+        emitter.off('commandAdvertiseText', handleAdvertiseText);
 
         window.removeEventListener("keydown", handleKeyDown);
         window.removeEventListener("keyup", handleKeyUp);
@@ -476,12 +484,27 @@ export const Drone = React.forwardRef(
     return (
       <>
         <mesh ref={droneRef}>
-          <primitive
-            object={memoizedDrone.scene}
-            position={[0, 0, 0]}
-            scale={droneScale}
-          />
-        </mesh>
+           <primitive
+             object={memoizedDrone.scene}
+             position={[0, 0, 0]}
+             scale={droneScale} />
+         </mesh>
+
+        {flyerText && (
+          <>
+            <mesh position={[0, -0.4, 0]}>
+              <planeGeometry args={[100, 10]} />
+              <meshBasicMaterial color="white" side={THREE.DoubleSide} />
+            </mesh>
+
+            <Text
+              position={[0, 0, 1]}
+              fontSize={5}
+              color="black"
+              anchorX="center"
+              anchorY="middle"> {flyerText} </Text>
+          </>
+        )}
         <Line points={path} color={lineColor} lineWidth={3} />
       </>
     );
@@ -495,6 +518,7 @@ Drone.propTypes = {
   cameraOffset: PropTypes.arrayOf(PropTypes.number),
   lineColor: PropTypes.string,
   droneSpeed: PropTypes.number,
+  flyerText: PropTypes.string,
 };
 
 export default Drone;

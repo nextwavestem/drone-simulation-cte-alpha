@@ -206,17 +206,21 @@ export const toolbarFunctionHandler = () => {
         return `pickupObject('${objectName}');`;
       };
       
-      javascriptGenerator.forBlock['drop_object'] = function(block) {
+    javascriptGenerator.forBlock['drop_object'] = function(block) {
         const objectName = block.getFieldValue('OBJECT_NAME');
         return `dropObject('${objectName}');`;
-      };
+    };
 
-      javascriptGenerator.forBlock['spray_object'] = function(block) {
+    javascriptGenerator.forBlock['spray_object'] = function(block) {
         const objectName = block.getFieldValue('OBJECT_NAME');
         return `sprayObject('${objectName}');`;
     };
     
-      
+    javascriptGenerator.forBlock['advertise_text'] = function(block) {
+        const text = block.getFieldValue('ADV_TEXT');
+        return `advertiseText('${text}');`;
+    };
+    
       
 }
 

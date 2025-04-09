@@ -8,7 +8,7 @@ const formatYaw = (yaw) => {
   return -Math.ceil(yaw * (180 / Math.PI)) % 360
 }
 
-export const Toolbar = ({ dronePosition }) => {
+export const Toolbar = ({ dronePosition, disableMeasurementView }) => {
   const [toggleValue, setToggleValue] = useState(false);
   const handleToggleChange = () => { 
     setToggleValue((prevValue) => {
@@ -31,10 +31,16 @@ export const Toolbar = ({ dronePosition }) => {
           <span className="rotation">Yaw: {formatYaw(dronePosition.yRot)}°</span>
         </div>
         <div className="column">
-        <label className="toggle-switch">
-          <input type="checkbox" checked={toggleValue} onChange={handleToggleChange}/>
-          <span className="slider"> Measurement View</span>
-        </label>
+          {!disableMeasurementView && (
+            <label className="toggle-switch">
+              <input 
+                type="checkbox" 
+                checked={toggleValue} 
+                onChange={handleToggleChange} 
+              />
+              <span className="slider">Measurement View</span>
+            </label>
+          )}
         </div>
       </div>
     </div>
@@ -50,6 +56,7 @@ Toolbar.propTypes = {
     xRot: PropTypes.number.isRequired,
     yRot: PropTypes.number.isRequired,
     zRot: PropTypes.number.isRequired,
+    disableMeasurementView: PropTypes.bool
   }).isRequired,
 };
 
