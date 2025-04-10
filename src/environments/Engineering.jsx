@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unknown-property */
 
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment,useGLTF } from '@react-three/drei';
+import { OrbitControls, Environment,useGLTF, Html,Line } from '@react-three/drei';
 import { useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
@@ -129,20 +129,6 @@ const displayCoordinatesText = (text, position) => {
   });
 };
 
-
-
-const Model = () => {
-  const { scene } = useGLTF('assets/models/Drone.glb'); 
-  const modelPosition = [10, -10, 0];
-
-  // Set the desired rotation (in radians)
-  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
-
-  // Apply rotation directly to the scene
-  scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
-};
-
 const ScreenshotCapture = () => {
   const { gl } = useThree();
 
@@ -169,6 +155,57 @@ const ScreenshotCapture = () => {
   return null; 
 };
 
+const Pointer = ({ start, end, label }) => {
+  return (
+    <group>
+      <Line
+        points={[start, end]}
+        color="black"
+        lineWidth={1}
+        dashed={false}
+      />
+
+      <mesh position={end}>
+        <sphereGeometry args={[0.3, 16, 16]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
+
+      <Html
+        position={[end[0] + 0.5, end[1] + 0.5, end[2] + 0]} 
+        style={{
+          background: 'white',
+          padding: '5px 20px',  
+          borderRadius: '12px',  
+          fontSize: '40px',       
+          color: 'black',
+          fontWeight: 'bold',
+          boxShadow: '0px 0px 8px rgba(0,0,0,0.5)', 
+          whiteSpace: 'nowrap',  
+          textAlign: 'center',
+          marginBottom: '20px'
+        }}
+        center
+        distanceFactor={10}
+      >
+        {label}
+      </Html>
+    </group>
+  );
+};
+
+const droneParts = [
+  { start: [5, 2.7, 3], end: [5, 6, 3], label: "Propeller" },
+  { start: [3.5, 2.2, 2.5], end: [10, 0, 0], label: "Brushless Motors" },
+  { start: [3.5, 1, 2.5], end: [10, -5, 0], label: "Landing Gear" },
+  { start: [0, 3, 2], end: [0, 0, 5], label: "Front Camera" },
+  { start: [0, 1, 1], end: [-5, 0, 5], label: "Stabilizer" },
+  { start: [0, 3, 0], end: [0, 8, 0], label: "Battery Power and Cover" },
+  { start: [0, 1.2, 0], end: [-6, 0, 0], label: "Micro SD" },
+  { start: [0, 0.5, -1], end: [0, 0, -6], label: "Battery Indicator" },
+  { start: [0, 2, 0], end: [-6, 3, 0], label: "Infrared Sensor" },
+];
+
+
 const Engineering = ({
   droneRef,
   measurementViewEnabled,
@@ -176,7 +213,10 @@ const Engineering = ({
 }) => {
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
-  
+    // const droneX = droneRef.current.position.x;
+    // const droneY = droneRef.current.position.y;
+    // const droneZ = droneRef.current.position.z;
+
   return (
   <Canvas 
     shadows 
@@ -198,8 +238,17 @@ const Engineering = ({
         mouseControlEnabled={mouseControlEnabled}
         droneScale={2}
         cameraOffset={[0,20,-18]}
-        lineColor={dronePathColor}
-      />
+        lineColor={dronePathColor} />
+        
+        {droneParts.map((pointer, index) => (
+          <Pointer 
+            key={index}
+            start={pointer.start}
+            end={pointer.end}
+            label={pointer.label}
+          />
+        ))}
+
   </Canvas>
   );
 };
