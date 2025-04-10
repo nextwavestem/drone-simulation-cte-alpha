@@ -132,7 +132,7 @@ const displayCoordinatesText = (text, position) => {
 
 
 const Model = () => {
-  const { scene } = useGLTF('assets/models/business/environment.glb'); 
+  const { scene } = useGLTF('assets/models/Drone.glb'); 
   const modelPosition = [10, -10, 0];
 
   // Set the desired rotation (in radians)
@@ -182,11 +182,11 @@ const Engineering = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
-      <color attach="background" args={['#87CEEB']} /> {/* Set background color */}
+      <color attach="background" args={['#ffffff']} /> {/* Set background color */}
 
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
-      <Model />
+     
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
@@ -196,7 +196,7 @@ const Engineering = ({
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={0.3}
+        droneScale={2}
         cameraOffset={[0,20,-18]}
         lineColor={dronePathColor}
       />
