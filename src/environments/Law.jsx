@@ -10,6 +10,7 @@ import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import emitter from '../config/eventEmmiter.js';
+import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -144,6 +145,24 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={1} />;
 };
 
+
+const Car = ({ position, rotation, scale = 0.02 }) => {
+  const { scene } = useGLTF('assets/models/transportation/tesla.glb');
+  const clonedScene = clone(scene); 
+  clonedScene.rotation.set(rotation[0], rotation[1], rotation[2]);
+
+  return <primitive object={clonedScene} position={position} scale={scale} />;
+};
+
+
+const Truck = ({ position, rotation, scale = 3 }) => {
+  const { scene } = useGLTF('assets/models/transportation/truck.glb');
+  const clonedScene = clone(scene); 
+  clonedScene.rotation.set(rotation[0], rotation[1], rotation[2]);
+
+  return <primitive object={clonedScene} position={position} scale={scale} />;
+};
+
 const ScreenshotCapture = () => {
   const { gl } = useThree();
 
@@ -201,6 +220,13 @@ const Law = ({
         cameraOffset={[0, 5, -20]}
         lineColor={dronePathColor}
       />
+      <Car position={[0, -5, 91]} rotation={[0, 110, 0]}/>
+      <Car position={[25, -5, 91]} rotation={[0, 110, 0]}/>
+      <Car position={[6, -5, 95]} rotation={[0, 0, 0]}/>
+      <Car position={[37, -5, 40]} rotation={[0, 17.3, 0]}/>
+      <Car position={[-30, -5, 40]} rotation={[0, 17.3, 0]}/>
+
+      <Truck position={[-30, -3.5, 60]} rotation={[0, 0, 0]}/>
   </Canvas>
   );
 };
