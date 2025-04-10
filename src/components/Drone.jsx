@@ -364,9 +364,6 @@ export const Drone = React.forwardRef(
     };
 
     useEffect(() => {
-      // Register event listener
-
-
       emitter.on("commandFlyFoward", droneMovePositiveZ);
       emitter.on("commandFlyBackward", droneMoveNegativeZ);
       emitter.on("commandFlyUp", droneMovePositiveY);

@@ -205,29 +205,25 @@ const droneParts = [
   { start: [0, 2, 0], end: [-6, 3, 0], label: "Infrared Sensor" },
 ];
 
-
 const Engineering = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
-  const [pins, setPins] = useState([]); // State to track pin positions
-    // const droneX = droneRef.current.position.x;
-    // const droneY = droneRef.current.position.y;
-    // const droneZ = droneRef.current.position.z;
+  const [pins, setPins] = useState([]); 
+  const droneX = droneRef.current?.position.x || 0;
+  const droneY = droneRef.current?.position.y || 0;
+  const droneZ = droneRef.current?.position.z || 0;
 
   return (
   <Canvas 
     shadows 
-    onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
-  >
-      <color attach="background" args={['#ffffff']} /> {/* Set background color */}
-
-      <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
-      <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
-     
-
+    onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} >
+      <color attach="background" args={['#ffffff']} /> 
+      <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> 
+      <Environment preset="sunset" intensity={0.5} /> 
+    
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
       <ScreenshotCapture />
@@ -237,24 +233,23 @@ const Engineering = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={2}
-        cameraOffset={[0,20,-18]}
+        cameraOffset={[0, 20, -18]}
         lineColor={dronePathColor} />
         
         {droneParts.map((pointer, index) => (
           <Pointer 
             key={index}
-            start={pointer.start}
-            end={pointer.end}
+            start={[droneX + pointer.start[0], droneY + pointer.start[1],droneZ + pointer.start[2]]}
+            end={[droneX + pointer.end[0], droneY + pointer.end[1],droneZ + pointer.end[2]]}
             label={pointer.label}
           />
         ))}
-
   </Canvas>
   );
 };
 
 Engineering.propTypes = {
-  droneRef: PropTypes.object.isRequired, // Define the prop type
+  droneRef: PropTypes.object.isRequired, 
   mouseControlEnabled: PropTypes.bool,
   measurementViewEnabled:  PropTypes.bool,
 };

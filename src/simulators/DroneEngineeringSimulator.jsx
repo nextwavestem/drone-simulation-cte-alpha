@@ -57,7 +57,7 @@ const DroneEngineeringSimulator = () => {
             </div>
             
             <div className="transportation-canvas-container">
-              <Toolbar dronePosition={dronePosition} />
+              <Toolbar dronePosition={dronePosition} disableMeasurementView/>
               <Engineering 
                 droneRef={droneRef} 
                 measurementViewEnabled={measurementView}
