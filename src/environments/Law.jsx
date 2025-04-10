@@ -2,8 +2,8 @@
 /* eslint-disable react/no-unknown-property */
 
 import { Canvas, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment,useGLTF } from '@react-three/drei';
-import { useRef, useEffect, useState } from "react";
+import { OrbitControls, Environment,useGLTF, Line, Text } from '@react-three/drei';
+import { useRef, useEffect, useState, useMemo } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
@@ -145,6 +145,38 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={1} />;
 };
 
+const ChargingCar = ({ position, rotation, scale = 0.02, text = "0", type="car" }) => {
+  let scene;
+  if (type === "truck") {
+    scene = useGLTF('assets/models/transportation/truck.glb').scene;
+  } else {
+    scene = useGLTF('assets/models/transportation/tesla.glb').scene;
+  }
+  
+
+  const clonedScene = useMemo(() => {
+    const cloneScene = clone(scene);
+    cloneScene.rotation.set(rotation[0], rotation[1], rotation[2]);
+    return cloneScene;
+  }, [scene, rotation]);
+
+  const start = [position[0], position[1] + 5, position[2]]; 
+  const end = position;
+
+  return (
+    <>
+      {/* Pointer Line */}
+      <Line points={[start, end]}  color="white" lineWidth={2} />
+      
+      <Text position={[start[0], start[1] + 3, start[2]]} rotation={[0,90,0]}
+        fontSize={3} color="red" anchorX="center" anchorY="middle" >
+        {text}
+      </Text>
+
+      <primitive object={clonedScene} position={position} scale={scale} />
+    </>
+  );
+};
 
 const Car = ({ position, rotation, scale = 0.02 }) => {
   const { scene } = useGLTF('assets/models/transportation/tesla.glb');
@@ -202,7 +234,7 @@ const Law = ({
     shadows 
     onClick={(event) => handleCanvasClick(event, setPins, measurementViewEnabled, droneRef)} // Pass click event
   >
-      <color attach="background" args={['#fffffff']} /> {/* Set background color */}
+      <color attach="background" args={['#000000']} /> {/* Set background color */}
 
       <ambientLight intensity={0.4} color={new THREE.Color(0xffc1a0)} /> {/* Warm light color */}
       <Environment preset="sunset" intensity={0.5} /> {/* Adjusted intensity */}
@@ -223,10 +255,28 @@ const Law = ({
       <Car position={[0, -5, 91]} rotation={[0, 110, 0]}/>
       <Car position={[25, -5, 91]} rotation={[0, 110, 0]}/>
       <Car position={[6, -5, 95]} rotation={[0, 0, 0]}/>
-      <Car position={[37, -5, 40]} rotation={[0, 17.3, 0]}/>
-      <Car position={[-30, -5, 40]} rotation={[0, 17.3, 0]}/>
 
-      <Truck position={[-30, -3.5, 60]} rotation={[0, 0, 0]}/>
+      <Car position={[37, -5, 40]} rotation={[0, 17.3, 0]}/>
+      <Truck position={[33, -3.4, 60]} rotation={[0, 0, 0]}/>
+
+
+      <Car position={[-30, -5, 40]} rotation={[0, 17.3, 0]}/>
+      <Truck position={[-30, -3.4, 60]} rotation={[0, 0, 0]}/>
+
+
+
+      {/*  charging cars */}
+
+      <ChargingCar position={[-50, -5, 40]} rotation={[0, 17.3, 0]} text="0"/>
+      <ChargingCar position={[-55, -5, 40]} rotation={[0, 17.3, 0]} text="15"/>
+      <ChargingCar position={[-60, -5, 40]} rotation={[0, 17.3, 0]} text="30"/>
+      <ChargingCar position={[-65, -5, 40]} rotation={[0, 17.3, 0]} text="6"/>
+      <ChargingCar position={[-70, -5, 40]} rotation={[0, 17.3, 0]} text="2"/>
+      <ChargingCar position={[-75, -5, 40]} rotation={[0, 17.3, 0]} text="50"/>
+
+      <ChargingCar position={[-50, -3.4, 20]} rotation={[0, 0, 0]} text="30" type="truck" scale={3}/>
+      <ChargingCar position={[-57, -3.4, 20]} rotation={[0, 0, 0]} text="0" type="truck" scale={3}/>
+      <ChargingCar position={[-64, -3.4, 20]} rotation={[0, 0, 0]} text="51" type="truck" scale={3}/>
   </Canvas>
   );
 };

@@ -35,6 +35,7 @@ export const Drone = React.forwardRef(
       lineColor,
       flyerText,
       droneSpeed = 0.033333333332,
+      droneInitialPosition = [0,0,0]
     },
     ref
   ) => {
@@ -478,7 +479,7 @@ export const Drone = React.forwardRef(
         <mesh ref={droneRef}>
            <primitive
              object={memoizedDrone.scene}
-             position={[0, 0, 0]}
+             position={droneInitialPosition}
              scale={droneScale} />
          </mesh>
 
@@ -511,6 +512,7 @@ Drone.propTypes = {
   lineColor: PropTypes.string,
   droneSpeed: PropTypes.number,
   flyerText: PropTypes.string,
+  droneInitialPosition: PropTypes.arrayOf(PropTypes.number)
 };
 
 export default Drone;
