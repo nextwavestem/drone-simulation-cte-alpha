@@ -14,6 +14,7 @@ import DroneITSimulator from "./simulators/DroneITSimulator.jsx";
 import DroneAgricultureSimulator from "./simulators/DroneAgricultureSimulator.jsx";
 import DroneManufacturingSimulator from "./simulators/DroneManufacturingSimulator.jsx";
 import DroneHospitalitySimulator from "./simulators/DroneHospitalitySimulator.jsx";
+import DroneLawSimulator from "./simulators/DroneLawSimulator.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -33,7 +34,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/agriculture" element={<DroneAgricultureSimulator />} />
         <Route path="/slate" element={<DroneSlateSimulator />} />
         <Route path="/manufacturing" element={<DroneManufacturingSimulator />} />
-        <Route path="/law" element={<DroneManufacturingSimulator />} />
+        <Route path="/law" element={<DroneLawSimulator />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>
