@@ -133,14 +133,14 @@ const displayCoordinatesText = (text, position) => {
 
 const Model = () => {
   const { scene } = useGLTF('assets/models/communication/environment.glb'); 
-  const modelPosition = [10, -10, 0];
+  const modelPosition = [0, 0, 0];
 
   // Set the desired rotation (in radians)
-  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, -48.7, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={50} />;
+  return <primitive object={scene} position={modelPosition} scale={0.5} />;
 };
 
 const ScreenshotCapture = () => {
@@ -197,8 +197,19 @@ const Communication = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={0.3}
-        cameraOffset={[0,20,-18]}
+        cameraOffset={[0,5,-18]}
         lineColor={dronePathColor}
+      />
+
+      <Drone
+        ref={droneRef}
+        controlsRef={controlsRef}
+        measurementViewEnabled={measurementViewEnabled}
+        mouseControlEnabled={mouseControlEnabled}
+        droneScale={0.3}
+        cameraOffset={[0,5,-18]}
+        lineColor={dronePathColor}
+        droneInitialPosition={[1,1,1]}
       />
   </Canvas>
   );
