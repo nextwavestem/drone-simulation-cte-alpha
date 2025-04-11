@@ -6,7 +6,7 @@ import { OrbitControls, Environment,useGLTF } from '@react-three/drei';
 import { useRef, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import * as THREE from 'three';
-import { Drone} from '../components/Drone.jsx';
+import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import emitter from '../config/eventEmmiter.js';
@@ -19,7 +19,6 @@ let measurementLineColor = "white";
 let measurementPinColor = "black";
 let dronePathColor = "yellow"
 let measurementTextColor="black"
-let advtertisedText = "Sale"
 
 const CameraController = ({ measurementViewEnabled }) => {
   const { camera, gl, scene } = useThree();
@@ -27,8 +26,8 @@ const CameraController = ({ measurementViewEnabled }) => {
 
   useEffect(() => {
     if (measurementViewEnabled) {
-      camera.position.set(-350,100, 300); // Move camera to top-down view
-      camera.lookAt(new THREE.Vector3(400, 50, -200));
+      camera.position.set(5, 100, -3); // Move camera to top-down view
+      camera.lookAt(new THREE.Vector3(0, 0, 0));
       camera.updateProjectionMatrix();
 
       if (controlsRef.current) {
@@ -130,12 +129,16 @@ const displayCoordinatesText = (text, position) => {
   });
 };
 
+
+
 const Model = () => {
-  const { scene } = useGLTF('assets/models/communication/farm_scene.glb'); 
-  const modelPosition = [200, -20, -130];
+  const { scene } = useGLTF('assets/models/communication/environment.glb'); 
+  const modelPosition = [10, -10, 0];
 
-  const rotation = [0, 400, 0];
+  // Set the desired rotation (in radians)
+  const rotation = [0, 240, 0]; // Example: Rotate 45 degrees around the Y-axis
 
+  // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
   return <primitive object={scene} position={modelPosition} scale={50} />;
 };
@@ -153,21 +156,13 @@ const ScreenshotCapture = () => {
     link.click();
   };
 
-
   useEffect(() => {
     const handleScreenshotCommand = () => {
       captureImage();
     };
-    const handleAdvertiseText = (text) => {
-      advtertisedText = text;
-    }
-
-    emitter.on('commandAdvertiseText', handleAdvertiseText);
     emitter.on('commandTakeScreenShot', handleScreenshotCommand);
     return () => {
       emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-      emitter.off('commandAdvertiseText', handleAdvertiseText);
-
     };
   }, []);
 
@@ -196,15 +191,13 @@ const Communication = ({
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
       <ScreenshotCapture />
-
       <Drone
-        flyerText={advtertisedText}
         ref={droneRef}
         controlsRef={controlsRef}
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
-        droneScale={5}
-        cameraOffset={[0,50,-80]}
+        droneScale={0.3}
+        cameraOffset={[0,20,-18]}
         lineColor={dronePathColor}
       />
   </Canvas>

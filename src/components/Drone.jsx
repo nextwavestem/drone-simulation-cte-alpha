@@ -474,6 +474,10 @@ export const Drone = React.forwardRef(
       updateDroneMovement();
     });
 
+    const dx = droneRef.current?.position.x || 0
+    const dy = droneRef.current?.position.y || 0
+    const dz = droneRef.current?.position.z || 0
+
     return (
       <>
         <mesh ref={droneRef}>
@@ -485,7 +489,7 @@ export const Drone = React.forwardRef(
 
         {flyerText && (
           <>
-            <mesh position={[0, -0.4, 0]}>
+            <mesh position={[dx + 0, dy -0.4, dz + 0]}>
               <planeGeometry args={[100, 10]} />
               <meshBasicMaterial color="white" side={THREE.DoubleSide} />
             </mesh>
