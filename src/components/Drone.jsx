@@ -300,7 +300,7 @@ export const Drone = React.forwardRef(
 
       const totalRadians = THREE.MathUtils.degToRad(degrees);
       const isClockwise =
-        direction === "CIRCLE_RIGHT" || direction === "ARC_RIGHT";
+        direction === "CIRCLE_RIGHT" || direction === "ARC_RIGHT" || direction == "RIGHT";
 
       moveInArc(radiusInThreeJsUnits, totalRadians, isClockwise);
     };
