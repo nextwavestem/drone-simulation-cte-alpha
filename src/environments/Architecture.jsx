@@ -116,7 +116,7 @@ const handleCanvasClick = (event, setPins, enableMeasurement, droneRef) => {
   }
 };
 
-const displayCoordinatesText = (text, position) => {
+/*const displayCoordinatesText = (text, position) => {
   loader.load(
     "assets/helvetiker_regular.typeface.json",
     (font) => {
@@ -140,6 +140,65 @@ const displayCoordinatesText = (text, position) => {
       textMesh.quaternion.copy(GlobalCamera.quaternion);
       textMesh.lookAt(GlobalCamera.position);
       GlobalScene.add(textMesh); // Add the text mesh to the scene
+    },
+    undefined,
+    (error) => {
+      console.error("An error occurred loading the font:", error);
+    }
+  );
+};*/
+const displayCoordinatesText = (text, position) => {
+  loader.load(
+    "assets/helvetiker_regular.typeface.json",
+    (font) => {
+      const textGeometry = new TextGeometry(text, {
+        font: font,
+        size: 4,
+        height: 0.09,
+        curveSegments: 1,
+        bevelEnabled: false,
+        bevelThickness: 0.0,
+        bevelSize: 0.03,
+        bevelSegments: 2,
+      });
+
+      const textMaterial = new THREE.MeshBasicMaterial({ color: "black" });
+      const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+
+      // Compute text bounding box to center and size the background
+      textGeometry.computeBoundingBox();
+      const bbox = textGeometry.boundingBox;
+      const textWidth = bbox.max.x - bbox.min.x;
+      const textHeight = bbox.max.y - bbox.min.y;
+
+      // Center the text
+      textMesh.position.set(-textWidth / 2, 0, 0);
+
+      // Create white background plane
+      const padding = 0.5;
+      const backgroundGeometry = new THREE.PlaneGeometry(
+        textWidth + padding,
+        textHeight + padding
+      );
+      const backgroundMaterial = new THREE.MeshBasicMaterial({
+        color: "white",
+        transparent: false,
+      });
+      const backgroundMesh = new THREE.Mesh(
+        backgroundGeometry,
+        backgroundMaterial
+      );
+
+      backgroundMesh.position.set(0, textHeight / 2, -0.1);
+
+      // Group text and background
+      const labelGroup = new THREE.Group();
+      labelGroup.add(backgroundMesh);
+      labelGroup.add(textMesh);
+      labelGroup.position.set(position.x, position.y + 50, position.z);
+      labelGroup.lookAt(GlobalCamera.position);
+
+      GlobalScene.add(labelGroup);
     },
     undefined,
     (error) => {
