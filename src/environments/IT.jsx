@@ -205,9 +205,9 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       book.getWorldPosition(bookPos);
       const distance = dronePos.distanceTo(bookPos);
 
-      if (distance < 15) {
+      if (distance < 20) {
         drone.attach(book);
-        book.position.set(0, 2, 0);
+        book.position.set(0, 2, -3);
         console.log(`Picked up ${objectName}`);
       } else {
         console.log(`${objectName} too far to pick up.`);
@@ -222,7 +222,12 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       GlobalScene.attach(book);
       const dropPosition = new THREE.Vector3();
       drone.getWorldPosition(dropPosition);
-      book.position.copy(dropPosition);
+      const localPosition = GlobalScene.worldToLocal(worldPosition.clone());
+
+      book.position.copy(localPosition);
+
+      console.log("Drone world position at drop:", worldPosition);
+      console.log("Book local position after conversion:", localPosition);
       console.log(`Dropped ${objectName}`);
     };
 
@@ -260,7 +265,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
         droneScale={0.5}
         cameraOffset={[-5.5, 5, -9]}
         lineColor={dronePathColor}
-        droneSpeed={0.1}
+        droneSpeed={0.9}
       />
       <SimpleModel
         ref={desktopRef1}
@@ -317,7 +322,7 @@ const IT = ({ droneRef, measurementViewEnabled, mouseControlEnabled }) => {
       <SimpleModel
         ref={paperRef}
         path={`${import.meta.env.BASE_URL}assets/models/infotech/paper.glb`}
-        position={[20, -18, 5]}
+        position={[28, -18, 5]}
         //rotation={[0, Math.PI, 0]}
         scale={2}
         name="paper"

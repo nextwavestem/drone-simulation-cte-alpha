@@ -211,11 +211,12 @@ const Hospitality = ({
       book.getWorldPosition(bookPos);
       const distance = dronePos.distanceTo(bookPos);
 
-      if (distance < 15) {
+      if (distance < 20) {
         drone.attach(book);
         book.position.set(0, 2, 0);
         console.log(`Picked up ${objectName}`);
       } else {
+        console.log(distance);
         console.log(`${objectName} too far to pick up.`);
       }
     };
@@ -264,6 +265,7 @@ const Hospitality = ({
         droneScale={2}
         cameraOffset={[10, 20, -20]}
         lineColor={dronePathColor}
+        droneSpeed={0.4}
       />
       <SimpleModel
         ref={cushionRef1}
@@ -310,7 +312,7 @@ const Hospitality = ({
         path={`${import.meta.env.BASE_URL}assets/models/infotech/banana.glb`}
         position={[-30, -35, 50]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={20}
+        scale={15}
         name="peel"
         enableMeasurement={measurementViewEnabled}
       />

@@ -205,8 +205,14 @@ const Manufacturing = ({
       drone.getWorldPosition(dronePos);
       book.getWorldPosition(bookPos);
       const distance = dronePos.distanceTo(bookPos);
-
-      if (distance < 15) {
+      console.log(
+        distance,
+        "peel position",
+        bookPos,
+        "drone position",
+        dronePos
+      );
+      if (distance < 20) {
         drone.attach(book);
         book.position.set(0, 2, 0);
         console.log(`Picked up ${objectName}`);
@@ -223,7 +229,13 @@ const Manufacturing = ({
       GlobalScene.attach(book);
       const dropPosition = new THREE.Vector3();
       drone.getWorldPosition(dropPosition);
-      book.position.copy(dropPosition);
+      const localPosition = GlobalScene.worldToLocal(worldPosition.clone());
+
+      book.position.copy(localPosition);
+
+      console.log("Drone world position at drop:", worldPosition);
+      console.log("Book local position after conversion:", localPosition);
+      //book.position.copy(dropPosition);
       console.log(`Dropped ${objectName}`);
     };
 
@@ -261,6 +273,7 @@ const Manufacturing = ({
         droneScale={0.9}
         cameraOffset={[25, 25, -35]}
         lineColor={dronePathColor}
+        droneSpeed={0.4}
       />
       <SimpleModel
         ref={carRef}

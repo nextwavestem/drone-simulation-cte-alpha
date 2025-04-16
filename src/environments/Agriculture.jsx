@@ -191,9 +191,12 @@ const Agriculture = ({
   const controlsRef = useRef();
   const [pins, setPins] = useState([]); // State to track pin positions
   const barnRef = useRef();
-  const birdRef = useRef();
+  const birdRef1 = useRef();
+  const birdRef2 = useRef();
+  const birdRef3 = useRef();
   const canRef = useRef();
-  const pestRef = useRef();
+  const pestRef1 = useRef();
+  const pestRef2 = useRef();
   const pollenRef1 = useRef();
   const pollenRef2 = useRef();
 
@@ -287,8 +290,55 @@ const Agriculture = ({
       emitter.off("commandSpray", handleSpray);
     };
   }, []);
-
   useEffect(() => {
+    const birdRefs = [birdRef1, birdRef2, birdRef3];
+    const hasFlownMap = new Map(); // Track which birds have flown
+    const flyingIntervals = new Map(); // Store intervals per bird
+
+    const handleBirdFlight = () => {
+      const drone = droneRef.current;
+      if (!drone) return;
+
+      const dronePosition = new THREE.Vector3();
+      drone.getWorldPosition(dronePosition);
+
+      birdRefs.forEach((ref, index) => {
+        const bird = ref.current;
+        if (!bird || hasFlownMap.get(index)) return;
+
+        const birdPosition = new THREE.Vector3();
+        bird.getWorldPosition(birdPosition);
+
+        const distance = dronePosition.distanceTo(birdPosition);
+
+        if (distance < 20 && !hasFlownMap.get(index)) {
+          hasFlownMap.set(index, true); // Mark this bird as flown
+
+          const flightSpeed = 0.15;
+          const interval = setInterval(() => {
+            bird.position.y += flightSpeed;
+            bird.position.x += flightSpeed * 0.5;
+
+            if (bird.position.y > 40) {
+              clearInterval(interval);
+              flyingIntervals.delete(index);
+            }
+          }, 16);
+
+          flyingIntervals.set(index, interval);
+        }
+      });
+    };
+
+    const intervalId = setInterval(handleBirdFlight, 1000);
+
+    return () => {
+      clearInterval(intervalId);
+      flyingIntervals.forEach((interval) => clearInterval(interval));
+    };
+  }, [droneRef, birdRef1, birdRef2, birdRef3]);
+
+  /*useEffect(() => {
     let birdFlyingInterval = null;
     let birdHasFlown = false;
 
@@ -329,7 +379,7 @@ const Agriculture = ({
       clearInterval(intervalId);
       if (birdFlyingInterval) clearInterval(birdFlyingInterval);
     };
-  }, [droneRef, birdRef]);
+  }, [droneRef, birdRef]);*/
 
   return (
     <Canvas
@@ -360,11 +410,27 @@ const Agriculture = ({
         droneSpeed={0.6}
       />
       <SimpleModel
-        ref={birdRef}
+        ref={birdRef1}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
         position={[15, 18, 55]}
         scale={5}
         name="bird1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={birdRef2}
+        path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
+        position={[-45, 18, 45]}
+        scale={5}
+        name="bird2"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={birdRef3}
+        path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
+        position={[-15, 18, 75]}
+        scale={5}
+        name="bird3"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
@@ -384,14 +450,25 @@ const Agriculture = ({
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
-        ref={pestRef}
+        ref={pestRef1}
         path={`${
           import.meta.env.BASE_URL
         }assets/models/agriculture/pesticides.glb`}
-        position={[14, -1, 6]}
+        position={[-30.43, -1.53, 18.13]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={3}
-        name="pesticide"
+        scale={6}
+        name="pesticide1"
+        enableMeasurement={measurementViewEnabled}
+      />
+      <SimpleModel
+        ref={pestRef2}
+        path={`${
+          import.meta.env.BASE_URL
+        }assets/models/agriculture/pesticides.glb`}
+        position={[47.91, 0.27, 13.75]}
+        rotation={[0, Math.PI / 2, 0]}
+        scale={6}
+        name="pesticide2"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel

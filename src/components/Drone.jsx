@@ -35,7 +35,7 @@ export const Drone = React.forwardRef(
       lineColor,
       flyerText,
       droneSpeed = 0.033333333332,
-      droneInitialPosition = [0,0,0]
+      droneInitialPosition = [0, 0, 0],
     },
     ref
   ) => {
@@ -61,7 +61,8 @@ export const Drone = React.forwardRef(
     const [isStalling, setIsStalling] = useState(false);
     const [isFlipping, setIsFlipping] = useState(false); // State to track flipping status
 
-    const DEFAULT_DRONE_SPEED = 0.033333333332;
+    //const DEFAULT_DRONE_SPEED = 0.033333333332;
+    const DEFAULT_DRONE_SPEED = droneSpeed;
     //let droneSpeed = DEFAULT_DRONE_SPEED;
 
     const updateDronePosition = (directionVector, [distance, unit]) => {
@@ -268,7 +269,7 @@ export const Drone = React.forwardRef(
       }
 
       const targetPosition = new THREE.Vector3(newX, newY, newZ);
-      const speed = 0.05;
+      const speed = droneSpeed;
 
       const moveStep = () => {
         const currentPosition = droneRef.current.position.clone();
@@ -300,7 +301,9 @@ export const Drone = React.forwardRef(
 
       const totalRadians = THREE.MathUtils.degToRad(degrees);
       const isClockwise =
-        direction === "CIRCLE_RIGHT" || direction === "ARC_RIGHT" || direction == "RIGHT";
+        direction === "CIRCLE_RIGHT" ||
+        direction === "ARC_RIGHT" ||
+        direction == "RIGHT";
 
       moveInArc(radiusInThreeJsUnits, totalRadians, isClockwise);
     };
@@ -374,7 +377,7 @@ export const Drone = React.forwardRef(
       emitter.on("commandFlyTo", moveToPosition);
       emitter.on("commandRotate", rotateDrone);
       emitter.on("resetSimulationEnv", resetDrone);
-      
+
       emitter.on("commandSetWaitTime", stallAndFly);
       emitter.on("commandSetSpeed", updateDroneSpeed);
       emitter.on("commandFlip", flipDrone);
@@ -474,22 +477,23 @@ export const Drone = React.forwardRef(
       updateDroneMovement();
     });
 
-    const dx = droneRef.current?.position.x || 0
-    const dy = droneRef.current?.position.y || 0
-    const dz = droneRef.current?.position.z || 0
+    const dx = droneRef.current?.position.x || 0;
+    const dy = droneRef.current?.position.y || 0;
+    const dz = droneRef.current?.position.z || 0;
 
     return (
       <>
         <mesh ref={droneRef}>
-           <primitive
-             object={memoizedDrone.scene}
-             position={droneInitialPosition}
-             scale={droneScale} />
-         </mesh>
+          <primitive
+            object={memoizedDrone.scene}
+            position={droneInitialPosition}
+            scale={droneScale}
+          />
+        </mesh>
 
         {flyerText && (
           <>
-            <mesh position={[dx + 0, dy -0.4, dz + 0]}>
+            <mesh position={[dx + 0, dy - 0.4, dz + 0]}>
               <planeGeometry args={[100, 10]} />
               <meshBasicMaterial color="white" side={THREE.DoubleSide} />
             </mesh>
@@ -499,7 +503,11 @@ export const Drone = React.forwardRef(
               fontSize={5}
               color="black"
               anchorX="center"
-              anchorY="middle"> {flyerText} </Text>
+              anchorY="middle"
+            >
+              {" "}
+              {flyerText}{" "}
+            </Text>
           </>
         )}
         <Line points={path} color={lineColor} lineWidth={3} />
@@ -516,7 +524,7 @@ Drone.propTypes = {
   lineColor: PropTypes.string,
   droneSpeed: PropTypes.number,
   flyerText: PropTypes.string,
-  droneInitialPosition: PropTypes.arrayOf(PropTypes.number)
+  droneInitialPosition: PropTypes.arrayOf(PropTypes.number),
 };
 
 export default Drone;
