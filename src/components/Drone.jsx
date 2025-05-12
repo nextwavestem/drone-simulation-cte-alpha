@@ -67,30 +67,39 @@ export const Drone = React.forwardRef(
     //let droneSpeed = DEFAULT_DRONE_SPEED;
 
     const updateDronePosition = (directionVector, [distance, unit]) => {
-      const targetPosition = directionVector.clone();
       return new Promise((resolve) => {
+        const drone = droneRef.current;
+        if (!drone) return resolve();
+    
+        const step = droneSpeed;
+        const convertedDistance = unit === "INCHES" ? distance * DISTANCE_INCHES_OFFSET : distance;
+    
+        const direction = directionVector.clone().normalize().applyQuaternion(drone.quaternion);
+        const targetPosition = drone.position.clone().add(direction.clone().multiplyScalar(convertedDistance));
+   
         const animateMove = () => {
-          if (!droneRef.current) return resolve(); // Resolve if droneRef is unavailable
-
-          const currentPosition = droneRef.current.position.clone();
-          const direction = targetPosition
-            .clone()
-            .sub(currentPosition)
-            .normalize();
-
-          const step = droneSpeed;
-          const newPosition = currentPosition.add(
-            direction.multiplyScalar(step)
-          );
-          droneRef.current.position.copy(newPosition);
-
-          if (newPosition.distanceTo(targetPosition) > step) {
-            requestAnimationFrame(animateMove);
-          } else {
-            resolve();
+          if (!droneRef.current) return resolve();
+    
+          const currentPosition = drone.position.clone();
+          const remaining = targetPosition.clone().sub(currentPosition);
+          const distanceToTarget = remaining.length();
+    
+          if (distanceToTarget <= step) {
+            drone.position.copy(targetPosition);
+            return resolve();
           }
+    
+          const moveStep = remaining.normalize().multiplyScalar(step);
+          drone.position.add(moveStep);
+    
+          // Optional: maintain orientation toward movement direction
+          const lookAtPoint = targetPosition.clone();
+          lookAtPoint.y = drone.position.y; // keep level
+          drone.lookAt(lookAtPoint);
+    
+          requestAnimationFrame(animateMove);
         };
-
+    
         animateMove();
       });
     };
