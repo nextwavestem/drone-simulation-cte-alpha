@@ -9,8 +9,8 @@ import * as THREE from 'three';
 import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import emitter from '../config/eventEmmiter.js';
 import { clone } from 'three/examples/jsm/utils/SkeletonUtils';
+import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -195,38 +195,14 @@ const Truck = ({ position, rotation, scale = 3 }) => {
   return <primitive object={clonedScene} position={position} scale={scale} />;
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `transportation_${timestamp}.png`;
-    link.click();
-  };
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
-    return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-    };
-  }, []);
-
-  return null; 
-};
-
 const Law = ({
   droneRef,
   measurementViewEnabled,
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
+  const droneCameraRef = useRef();
+
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
@@ -242,7 +218,7 @@ const Law = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="law"/>
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}
@@ -251,6 +227,7 @@ const Law = ({
         droneScale={0.3}
         cameraOffset={[0, 5, -20]}
         lineColor={dronePathColor}
+        droneCameraRef={droneCameraRef}
       />
       <Car position={[0, -5, 91]} rotation={[0, 110, 0]}/>
       <Car position={[25, -5, 91]} rotation={[0, 110, 0]}/>

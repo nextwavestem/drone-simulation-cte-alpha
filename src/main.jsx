@@ -27,9 +27,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         <Route path="/education" element={<DroneEducationSimulator />} />
         <Route path="/communication" element={<DroneCommunicationSimulator />} />
         <Route path="/engineering" element={<DroneEngineeringSimulator />} />
-        <Route path="/healthscience" element={<DroneHealthScienceSimulator />} />
         <Route path="/hospitality" element={<DroneHospitalitySimulator />} />
-        <Route path="/human-services" element={<DroneHumanServicesSimulator />} />
         <Route path="/information-technology" element={<DroneITSimulator />} />
         <Route path="/agriculture" element={<DroneAgricultureSimulator />} />
         <Route path="/slate" element={<DroneSlateSimulator />} />

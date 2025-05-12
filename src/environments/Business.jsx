@@ -9,9 +9,7 @@ import * as THREE from 'three';
 import { Drone} from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import emitter from '../config/eventEmmiter.js';
-
-//  arts
+import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -142,39 +140,6 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={50} />;
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `transportation_${timestamp}.png`;
-    link.click();
-  };
-
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    const handleAdvertiseText = (text) => {
-      advtertisedText = text;
-    }
-
-    emitter.on('commandAdvertiseText', handleAdvertiseText);
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
-    return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-      emitter.off('commandAdvertiseText', handleAdvertiseText);
-
-    };
-  }, []);
-
-  return null; 
-};
 
 const Business = ({
   droneRef,
@@ -182,6 +147,8 @@ const Business = ({
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
+  const droneCameraRef = useRef();
+
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
@@ -197,7 +164,7 @@ const Business = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="mountain"/>
 
       <Drone
         flyerText={advtertisedText}
@@ -208,6 +175,7 @@ const Business = ({
         droneScale={5}
         cameraOffset={[0,50,-80]}
         lineColor={dronePathColor}
+        droneCameraRef={droneCameraRef}
       />
   </Canvas>
   );

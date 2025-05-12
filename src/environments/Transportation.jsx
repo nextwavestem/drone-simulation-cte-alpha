@@ -10,6 +10,7 @@ import { Drone } from '../components/Drone.jsx';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import emitter from '../config/eventEmmiter.js';
+import ScreenshotCapture from '../components/ScreenshotCapture.jsx';
 
 const loader = new FontLoader(); 
 let GlobalCamera;
@@ -144,31 +145,6 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={1} />;
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `transportation_${timestamp}.png`;
-    link.click();
-  };
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
-    return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
-    };
-  }, []);
-
-  return null; 
-};
 
 const Transportation = ({
   droneRef,
@@ -176,6 +152,8 @@ const Transportation = ({
   mouseControlEnabled,
 }) => {
   const controlsRef = useRef();
+  const droneCameraRef = useRef();
+
   const [pins, setPins] = useState([]); // State to track pin positions
   
   return (
@@ -191,7 +169,8 @@ const Transportation = ({
 
       {pins.map((pin, index) => ( <Pin key={index} position={pin} /> ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture droneCameraRef={droneCameraRef} environment="transportation"/>
+
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}
@@ -200,6 +179,7 @@ const Transportation = ({
         droneScale={0.3}
         cameraOffset={[0, 5, -20]}
         lineColor={dronePathColor}
+        droneCameraRef={droneCameraRef}
       />
   </Canvas>
   );
