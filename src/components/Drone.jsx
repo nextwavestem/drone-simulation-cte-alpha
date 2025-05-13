@@ -36,7 +36,7 @@ export const Drone = React.forwardRef(
       flyerText,
       droneSpeed = 0.033333333332,
       droneInitialPosition = [0, 0, 0],
-      droneCameraRef
+      droneCameraRef,
     },
     ref
   ) => {
@@ -70,36 +70,42 @@ export const Drone = React.forwardRef(
       return new Promise((resolve) => {
         const drone = droneRef.current;
         if (!drone) return resolve();
-    
+
         const step = droneSpeed;
-        const convertedDistance = unit === "INCHES" ? distance * DISTANCE_INCHES_OFFSET : distance;
-    
-        const direction = directionVector.clone().normalize().applyQuaternion(drone.quaternion);
-        const targetPosition = drone.position.clone().add(direction.clone().multiplyScalar(convertedDistance));
-   
+        const convertedDistance =
+          unit === "INCHES" ? distance * DISTANCE_INCHES_OFFSET : distance;
+
+        const direction = directionVector
+          .clone()
+          .normalize()
+          .applyQuaternion(drone.quaternion);
+        const targetPosition = drone.position
+          .clone()
+          .add(direction.clone().multiplyScalar(convertedDistance));
+
         const animateMove = () => {
           if (!droneRef.current) return resolve();
-    
+
           const currentPosition = drone.position.clone();
           const remaining = targetPosition.clone().sub(currentPosition);
           const distanceToTarget = remaining.length();
-    
+
           if (distanceToTarget <= step) {
             drone.position.copy(targetPosition);
             return resolve();
           }
-    
+
           const moveStep = remaining.normalize().multiplyScalar(step);
           drone.position.add(moveStep);
-    
+
           // Optional: maintain orientation toward movement direction
           const lookAtPoint = targetPosition.clone();
           lookAtPoint.y = drone.position.y; // keep level
           drone.lookAt(lookAtPoint);
-    
+
           requestAnimationFrame(animateMove);
         };
-    
+
         animateMove();
       });
     };
@@ -498,8 +504,8 @@ export const Drone = React.forwardRef(
             makeDefault={false}
             ref={droneCameraRef}
             fov={75}
-            rotation={[0,59.6,0]}
-            position={[0,1,0]} // Position relative to drone
+            rotation={[0, 59.6, 0]}
+            position={[0, 1, 0]} // Position relative to drone
           />
           <primitive
             object={memoizedDrone.scene}

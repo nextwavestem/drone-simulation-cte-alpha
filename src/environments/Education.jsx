@@ -11,6 +11,7 @@ import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import emitter from "../config/eventEmmiter.js";
 import SimpleModel from "../components/SimpleModel";
+import ScreenshotCapture from "../components/ScreenshotCapture.jsx";
 
 const loader = new FontLoader();
 let GlobalCamera;
@@ -155,32 +156,6 @@ const Model = () => {
   return <primitive object={scene} position={modelPosition} scale={9} />;
 };
 
-const ScreenshotCapture = () => {
-  const { gl } = useThree();
-
-  const captureImage = () => {
-    const dataUrl = gl.domElement.toDataURL("image/png");
-
-    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-    const link = document.createElement("a");
-    link.href = dataUrl;
-    link.download = `transportation_${timestamp}.png`;
-    link.click();
-  };
-
-  useEffect(() => {
-    const handleScreenshotCommand = () => {
-      captureImage();
-    };
-    emitter.on("commandTakeScreenShot", handleScreenshotCommand);
-    return () => {
-      emitter.off("commandTakeScreenShot", handleScreenshotCommand);
-    };
-  }, []);
-
-  return null;
-};
-
 const Education = ({
   droneRef,
   measurementViewEnabled,
@@ -192,6 +167,7 @@ const Education = ({
   const bookReff = useRef();
   const bookRef1 = useRef();
   const bookRef2 = useRef();
+  const droneCameraRef = useRef();
 
   useEffect(() => {
     const handlePickup = (objectName) => {
@@ -252,7 +228,10 @@ const Education = ({
         <Pin key={index} position={pin} />
       ))}
       <CameraController measurementViewEnabled={measurementViewEnabled} />
-      <ScreenshotCapture />
+      <ScreenshotCapture
+        droneCameraRef={droneCameraRef}
+        environment="education"
+      />
       <Drone
         ref={droneRef}
         controlsRef={controlsRef}
@@ -262,6 +241,7 @@ const Education = ({
         cameraOffset={[5, 9, -12]}
         lineColor={dronePathColor}
         droneSpeed={0.4}
+        droneCameraRef={droneCameraRef}
       />
       <SimpleModel
         ref={bookRef}

@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
-import React, { useEffect } from 'react';
-import * as THREE from 'three';
-import { useThree } from '@react-three/fiber';
-import emitter from '../config/eventEmmiter.js';
+import React, { useEffect } from "react";
+import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
+import emitter from "../config/eventEmmiter.js";
 
 const ScreenshotCapture = ({ droneCameraRef, environment }) => {
   const { gl, scene, size } = useThree();
@@ -10,12 +10,21 @@ const ScreenshotCapture = ({ droneCameraRef, environment }) => {
   const captureImage = () => {
     const renderTarget = new THREE.WebGLRenderTarget(size.width, size.height);
     const originalRenderTarget = gl.getRenderTarget();
-
+    droneCameraRef.current.position.set(0, 0, 1);
     gl.setRenderTarget(renderTarget);
+    gl.clearColor(); // Clear the render target
+    gl.clear(true, true, true);
     gl.render(scene, droneCameraRef.current);
 
     const buffer = new Uint8Array(size.width * size.height * 4);
-    gl.readRenderTargetPixels(renderTarget, 0, 0, size.width, size.height, buffer);
+    gl.readRenderTargetPixels(
+      renderTarget,
+      0,
+      0,
+      size.width,
+      size.height,
+      buffer
+    );
 
     const canvas = document.createElement("canvas");
     canvas.width = size.width;
@@ -37,7 +46,7 @@ const ScreenshotCapture = ({ droneCameraRef, environment }) => {
     ctx.putImageData(imageData, 0, 0);
     const dataUrl = canvas.toDataURL("image/png");
 
-    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const link = document.createElement("a");
     link.href = dataUrl;
     link.download = `${environment}_${timestamp}.png`;
@@ -51,9 +60,9 @@ const ScreenshotCapture = ({ droneCameraRef, environment }) => {
     const handleScreenshotCommand = () => {
       if (droneCameraRef.current) captureImage();
     };
-    emitter.on('commandTakeScreenShot', handleScreenshotCommand);
+    emitter.on("commandTakeScreenShot", handleScreenshotCommand);
     return () => {
-      emitter.off('commandTakeScreenShot', handleScreenshotCommand);
+      emitter.off("commandTakeScreenShot", handleScreenshotCommand);
     };
   }, [droneCameraRef]);
 
