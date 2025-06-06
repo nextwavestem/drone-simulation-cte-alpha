@@ -147,15 +147,15 @@ const displayCoordinatesText = (text, position) => {
 };
 
 const Model = () => {
-  const { scene } = useGLTF("assets/models/agriculture/sunflowers.glb");
+  const { scene } = useGLTF("assets/models/agriculture/farm.glb");
   //const modelPosition = [-300, 50, 300];
-  const modelPosition = [60, 20, 175];
+  const modelPosition = [0, 0, 175];
   // Set the desired rotation (in radians)
-  const rotation = [0, 29, 0]; // Example: Rotate 45 degrees around the Y-axis
+  const rotation = [0, 45, 0]; // Example: Rotate 45 degrees around the Y-axis
 
   // Apply rotation directly to the scene
   scene.rotation.set(rotation[0], rotation[1], rotation[2]);
-  return <primitive object={scene} position={modelPosition} scale={20} />;
+  return <primitive object={scene} position={modelPosition} scale={10} />;
 };
 
 const Agriculture = ({
@@ -314,49 +314,6 @@ const Agriculture = ({
     };
   }, [droneRef, birdRef1, birdRef2, birdRef3]);
 
-  /*useEffect(() => {
-    let birdFlyingInterval = null;
-    let birdHasFlown = false;
-
-    const handleBirdFlight = () => {
-      const drone = droneRef.current;
-      const bird = birdRef.current;
-
-      if (!drone || !bird || birdHasFlown) return;
-
-      const dronePosition = new THREE.Vector3();
-      const birdPosition = new THREE.Vector3();
-
-      drone.getWorldPosition(dronePosition);
-      bird.getWorldPosition(birdPosition);
-
-      const distance = dronePosition.distanceTo(birdPosition);
-
-      if (distance < 20 && !birdHasFlown) {
-        birdHasFlown = true;
-
-        let flightSpeed = 0.15;
-        birdFlyingInterval = setInterval(() => {
-          bird.position.y += flightSpeed;
-          bird.position.x += flightSpeed * 0.5;
-
-          if (bird.position.y > 40) {
-            // Adjust height limit if needed
-            clearInterval(birdFlyingInterval);
-            birdFlyingInterval = null;
-          }
-        }, 16);
-      }
-    };
-
-    const intervalId = setInterval(handleBirdFlight, 1000);
-
-    return () => {
-      clearInterval(intervalId);
-      if (birdFlyingInterval) clearInterval(birdFlyingInterval);
-    };
-  }, [droneRef, birdRef]);*/
-
   return (
     <Canvas
       shadows
@@ -384,7 +341,7 @@ const Agriculture = ({
         measurementViewEnabled={measurementViewEnabled}
         mouseControlEnabled={mouseControlEnabled}
         droneScale={0.9}
-        cameraOffset={[-4, 8, -18]}
+        cameraOffset={[0, 10, -20]}
         lineColor={dronePathColor}
         droneSpeed={0.6}
         droneCameraRef={droneCameraRef}
@@ -392,51 +349,51 @@ const Agriculture = ({
       <SimpleModel
         ref={birdRef1}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
-        position={[15, 18, 55]}
-        scale={5}
+        position={[15, 50, 75]}
+        scale={10}
         name="bird1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={birdRef2}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
-        position={[-45, 18, 45]}
-        scale={5}
+        position={[-85, 70, -35]}
+        scale={10}
         name="bird2"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={birdRef3}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/bird.glb`}
-        position={[-15, 18, 75]}
-        scale={5}
+        position={[105, 30, 45]}
+        scale={10}
         name="bird3"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={canRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/can.glb`}
-        position={[14, -1, 1]}
+        position={[-70, 2, 140]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={5}
+        scale={20}
         name="watercan"
         enableMeasurement={measurementViewEnabled}
       />
-      <SimpleModel
+      {/*<SimpleModel
         ref={barnRef}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/barn.glb`}
         position={[18, -2, 4]}
         scale={40}
         enableMeasurement={measurementViewEnabled}
-      />
+      />*/}
       <SimpleModel
         ref={pestRef1}
         path={`${
           import.meta.env.BASE_URL
         }assets/models/agriculture/pesticides.glb`}
-        position={[-30.43, -1.53, 18.13]}
+        position={[10.43, 0, -45.13]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={6}
+        scale={20}
         name="pesticide1"
         enableMeasurement={measurementViewEnabled}
       />
@@ -445,27 +402,27 @@ const Agriculture = ({
         path={`${
           import.meta.env.BASE_URL
         }assets/models/agriculture/pesticides.glb`}
-        position={[47.91, 0.27, 13.75]}
+        position={[120.91, 0.27, 130.75]}
         rotation={[0, Math.PI / 2, 0]}
-        scale={6}
+        scale={20}
         name="pesticide2"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={pollenRef1}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[5.5, 8.5, 16]}
+        position={[47, 49, 97]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
-        scale={0.1}
+        scale={0.3}
         name="pollen1"
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
         ref={pollenRef2}
         path={`${import.meta.env.BASE_URL}assets/models/agriculture/pollen.glb`}
-        position={[-9, 11, 24]}
+        position={[13, 48, 100]}
         rotation={[0, Math.PI / 2, Math.PI / 2]}
-        scale={0.1}
+        scale={0.3}
         name="pollen2"
         enableMeasurement={measurementViewEnabled}
       />
