@@ -258,9 +258,9 @@ const Manufacturing = ({
       <SimpleModel
         ref={carRef}
         path={`${import.meta.env.BASE_URL}assets/models/manufacturing/car.glb`}
-        position={[-30, 16, 30]}
+        position={[-15, 13, 15]}
         rotation={[0, Math.PI - 10, 0]}
-        scale={0.09}
+        scale={0.04}
         enableMeasurement={measurementViewEnabled}
       />
       <SimpleModel
@@ -282,7 +282,7 @@ const Manufacturing = ({
       <SimpleModel
         ref={trashcanRef}
         path={`${import.meta.env.BASE_URL}assets/models/infotech/trashcan.glb`}
-        position={[-68, 0, 0]}
+        position={[-25, 0, 110]}
         rotation={[0, Math.PI / 2, 0]}
         scale={12}
         enableMeasurement={measurementViewEnabled}
@@ -310,7 +310,7 @@ const Manufacturing = ({
         path={`${
           import.meta.env.BASE_URL
         }assets/models/manufacturing/screwdriver.glb`}
-        position={[15, 10, 10]}
+        position={[55, 5, -20]}
         rotation={[0, Math.PI / 8, 0]}
         scale={10}
         name="screwdriver"
